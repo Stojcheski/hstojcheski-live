@@ -27,4 +27,7 @@ coverage
 *.sln
 *.sw?
 
+# Ignore .env files
+.env
+
 *.tsbuildinfo
