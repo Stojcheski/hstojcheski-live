@@ -1,40 +1,108 @@
+<!-- src/views/BlogPostView.vue -->
 <template>
-  <div class="blog-post" v-if="post">
-    <div class="container">
-      <div class="blog-header">
-        <h1>{{ post.title }}</h1>
-        <p class="date">{{ post.date }}</p>
-      </div>
+  <div class="blog-post-container">
+    <div v-if="loading" class="loading">
+      <p>Loading blog post...</p>
+    </div>
 
-      <div class="blog-content" v-html="post.content"></div>
+    <div v-else-if="error" class="error">
+      <p>{{ error }}</p>
+      <router-link to="/blog" class="btn">Back to Blog</router-link>
+    </div>
 
-      <div class="blog-footer">
-        <router-link to="/blog" class="back-link">← Back to all articles</router-link>
+    <div v-else-if="post" class="blog-post">
+      <div class="container">
+        <div class="blog-header">
+          <h1>{{ post.title }}</h1>
+          <p class="date">{{ post.date }}</p>
+        </div>
+
+        <div class="blog-content" v-html="post.content"></div>
+
+        <div class="blog-footer">
+          <router-link to="/blog" class="back-link">← Back to all articles</router-link>
+        </div>
       </div>
     </div>
-  </div>
-  <div v-else class="not-found">
+
+    <div v-else class="not-found">
+      <div class="container">
+        <h1>Post Not Found</h1>
+        <p>The blog post you're looking for doesn't exist.</p>
+        <router-link to="/blog" class="btn">Back to Blog</router-link>
+      </div>
+    </div>
+
+    <!-- Add this for debugging -->
     <div class="container">
-      <h1>Post Not Found</h1>
-      <p>The blog post you're looking for doesn't exist.</p>
-      <router-link to="/blog" class="btn btn-primary">Back to Blog</router-link>
+      <div
+        class="debug"
+        style="margin-top: 3rem; padding: 1rem; background: #f8f8f8; border-radius: 4px"
+      >
+        <h3>Debug Information</h3>
+        <p>Post ID: {{ postId }}</p>
+        <p>Loading: {{ loading }}</p>
+        <p>Error: {{ error }}</p>
+        <p>Post found: {{ post ? 'Yes' : 'No' }}</p>
+        <button @click="togglePostDetails" class="btn">
+          {{ showPostDetails ? 'Hide' : 'Show' }} Post Details
+        </button>
+        <pre v-if="showPostDetails">{{ JSON.stringify(post, null, 2) }}</pre>
+
+        <h4 style="margin-top: 1rem">Raw Current Post</h4>
+        <button @click="toggleRawPost" class="btn">
+          {{ showRawPost ? 'Hide' : 'Show' }} Raw Post
+        </button>
+        <pre v-if="showRawPost">{{ JSON.stringify(blogStore.currentPost, null, 2) }}</pre>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useBlogStore } from '@/stores/blog'
+import { useBlogStore } from '@/stores/BlogStore'
 
 const route = useRoute()
 const blogStore = useBlogStore()
-const post = computed(() => blogStore.getPostById(route.params.id))
+const showPostDetails = ref(false)
+const showRawPost = ref(false)
+
+const loading = computed(() => blogStore.loading)
+const error = computed(() => blogStore.error)
+
+// Get post ID from route
+const postId = computed(() => {
+  const id = route.params.id
+  return Array.isArray(id) ? id[0] : id
+})
+
+const post = computed(() => {
+  const result = blogStore.getPostById(postId.value)
+  console.log('Post computed result:', result)
+  return result
+})
+
+const togglePostDetails = () => {
+  showPostDetails.value = !showPostDetails.value
+}
+
+const toggleRawPost = () => {
+  showRawPost.value = !showRawPost.value
+}
+
+onMounted(async () => {
+  console.log('BlogPostView mounted, fetching post with ID:', postId.value)
+  // Fetch the post if needed
+  if (!post.value) {
+    await blogStore.fetchPostById(postId.value)
+  }
+})
 </script>
 
 <style scoped>
-.blog-post,
-.not-found {
+.blog-post-container {
   padding: 3rem 0;
 }
 
@@ -42,6 +110,15 @@ const post = computed(() => blogStore.getPostById(route.params.id))
   max-width: 800px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+.loading,
+.error,
+.not-found {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
 }
 
 .blog-header {
@@ -84,41 +161,45 @@ h1 {
   line-height: 1.7;
 }
 
-.blog-content :deep(ul),
-.blog-content :deep(ol) {
-  margin-bottom: 1.5rem;
-  margin-left: 1.5rem;
-}
-
-.blog-content :deep(li) {
-  margin-bottom: 0.5rem;
-}
-
 .blog-footer {
   text-align: center;
 }
 
 .back-link {
-  display: inline-flex;
-  align-items: center;
   color: #41b883;
   font-weight: 600;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .back-link:hover {
   text-decoration: underline;
 }
 
-.not-found {
-  text-align: center;
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #41b883;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 1rem;
+  border: none;
+  cursor: pointer;
 }
 
-.not-found h1 {
-  margin-bottom: 1rem;
+.btn:hover {
+  background-color: #349268;
 }
 
-.not-found p {
-  margin-bottom: 2rem;
+pre {
+  background-color: #f1f1f1;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  margin-top: 1rem;
 }
 </style>

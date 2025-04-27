@@ -1,3 +1,4 @@
+<!-- src/views/BlogView.vue -->
 <template>
   <div class="blog">
     <div class="container">
@@ -6,7 +7,17 @@
         I write about Salesforce development, best practices, and industry insights.
       </p>
 
-      <div class="blog-list">
+      <div v-if="loading" class="loading">
+        <p>Loading blog posts...</p>
+      </div>
+      <div v-else-if="error" class="error">
+        <p>{{ error }}</p>
+        <button @click="reloadPosts" class="btn">Try Again</button>
+      </div>
+      <div v-else-if="blogPosts.length === 0" class="no-posts">
+        <p>No blog posts available at the moment.</p>
+      </div>
+      <div v-else class="blog-list">
         <article v-for="post in blogPosts" :key="post.id" class="blog-card">
           <h2 class="blog-title">
             <router-link :to="`/blog/${post.id}`">{{ post.title }}</router-link>
@@ -16,15 +27,52 @@
           <router-link :to="`/blog/${post.id}`" class="read-more">Read more →</router-link>
         </article>
       </div>
+
+      <!-- Add this for debugging -->
+      <div
+        class="debug"
+        style="margin-top: 3rem; padding: 1rem; background: #f8f8f8; border-radius: 4px"
+      >
+        <h3>Debug Information</h3>
+        <p>Loading: {{ loading }}</p>
+        <p>Error: {{ error }}</p>
+        <p>Posts count: {{ blogPosts.length }}</p>
+        <button @click="togglePostsDetails" class="btn">
+          {{ showPostsDetails ? 'Hide' : 'Show' }} Posts Details
+        </button>
+        <pre v-if="showPostsDetails">{{ JSON.stringify(blogPosts, null, 2) }}</pre>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useBlogStore } from '@/stores/BlogStore'
+import { onMounted, computed, ref } from 'vue'
 
 const blogStore = useBlogStore()
-const blogPosts = blogStore.getAllPosts
+const blogPosts = computed(() => {
+  const posts = blogStore.getAllPosts
+  console.log('BlogPosts in component:', posts)
+  return posts
+})
+const loading = computed(() => blogStore.loading)
+const error = computed(() => blogStore.error)
+const showPostsDetails = ref(false)
+
+const togglePostsDetails = () => {
+  showPostsDetails.value = !showPostsDetails.value
+}
+
+const reloadPosts = () => {
+  console.log('Reloading posts...')
+  blogStore.fetchPosts()
+}
+
+onMounted(() => {
+  console.log('BlogView mounted, fetching posts...')
+  blogStore.fetchPosts()
+})
 </script>
 
 <style scoped>
@@ -53,6 +101,13 @@ h1 {
   margin-bottom: 3rem;
 }
 
+.loading,
+.error,
+.no-posts {
+  text-align: center;
+  padding: 2rem;
+}
+
 .blog-list {
   display: flex;
   flex-direction: column;
@@ -64,14 +119,6 @@ h1 {
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition:
-    transform 0.3s,
-    box-shadow 0.3s;
-}
-
-.blog-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
 .blog-title {
@@ -82,7 +129,6 @@ h1 {
 .blog-title a {
   color: #333;
   text-decoration: none;
-  transition: color 0.3s;
 }
 
 .blog-title a:hover {
@@ -104,11 +150,35 @@ h1 {
   color: #41b883;
   font-weight: 600;
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
 }
 
 .read-more:hover {
   text-decoration: underline;
+}
+
+pre {
+  background-color: #f1f1f1;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #41b883;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 1rem;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #349268;
 }
 </style>

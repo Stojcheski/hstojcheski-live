@@ -16,13 +16,13 @@
             <li class="skill-item">
               <span class="skill-name">Lightning Web Components</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 90%"></div>
+                <div class="skill-level" style="width: 85%"></div>
               </div>
             </li>
             <li class="skill-item">
               <span class="skill-name">Omnistudio (Vlocity)</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 85%"></div>
+                <div class="skill-level" style="width: 80%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -46,7 +46,7 @@
             <li class="skill-item">
               <span class="skill-name">REST API Development</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 85%"></div>
+                <div class="skill-level" style="width: 80%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -58,7 +58,7 @@
             <li class="skill-item">
               <span class="skill-name">Middleware Integration</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 75%"></div>
+                <div class="skill-level" style="width: 70%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -88,7 +88,7 @@
             <li class="skill-item">
               <span class="skill-name">Data Modeling</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 85%"></div>
+                <div class="skill-level" style="width: 82%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -106,25 +106,25 @@
             <li class="skill-item">
               <span class="skill-name">Apex</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 95%"></div>
+                <div class="skill-level" style="width: 90%"></div>
               </div>
             </li>
             <li class="skill-item">
               <span class="skill-name">JavaScript</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 85%"></div>
+                <div class="skill-level" style="width: 65%"></div>
               </div>
             </li>
             <li class="skill-item">
               <span class="skill-name">Java</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 75%"></div>
+                <div class="skill-level" style="width: 80%"></div>
               </div>
             </li>
             <li class="skill-item">
               <span class="skill-name">C++</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 80%"></div>
+                <div class="skill-level" style="width: 70%"></div>
               </div>
             </li>
           </ul>
@@ -136,7 +136,7 @@
             <li class="skill-item">
               <span class="skill-name">Git & GitHub</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 85%"></div>
+                <div class="skill-level" style="width: 80%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -166,7 +166,7 @@
             <li class="skill-item">
               <span class="skill-name">Problem Solving</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 95%"></div>
+                <div class="skill-level" style="width: 85%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -195,21 +195,27 @@
         <h2>Certifications</h2>
         <div class="certification-list">
           <div class="certification-item">
-            <div class="certification-logo salesforce"></div>
+            <div class="certification-logo">
+              <img :src="platformDeveloperOneBadge" alt="Platform Developer I Badge" />
+            </div>
             <div class="certification-details">
               <h3>Platform Developer I</h3>
               <p>Salesforce</p>
             </div>
           </div>
           <div class="certification-item">
-            <div class="certification-logo salesforce"></div>
+            <div class="certification-logo">
+              <img :src="adminBadge" alt="Platform Administrator Badge" />
+            </div>
             <div class="certification-details">
               <h3>Platform Administrator</h3>
               <p>Salesforce</p>
             </div>
           </div>
           <div class="certification-item">
-            <div class="certification-logo salesforce"></div>
+            <div class="certification-logo">
+              <img :src="dataCloudBadge" alt="Data Cloud Consultant Badge" />
+            </div>
             <div class="certification-details">
               <h3>Data Cloud Consultant</h3>
               <p>Salesforce</p>
@@ -220,6 +226,12 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import adminBadge from '@/assets/2021-03_Badge_SF-Certified_Administrator_500x490px.png'
+import platformDeveloperOneBadge from '@/assets/2021-03_Badge_SF-Certified_Platform-Developer-I_500x490px.png'
+import dataCloudBadge from '@/assets/2023-08_Badge_SF-Certified_Data-Cloud-Con_500x490px.png'
+</script>
 
 <style scoped>
 .skills {
@@ -328,17 +340,18 @@ h1 {
 }
 
 .certification-logo {
-  width: 60px;
-  height: 60px;
-  background-color: #f0f0f0;
-  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.certification-logo.salesforce {
-  background-color: #00a1e0;
+.certification-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .certification-details h3 {
