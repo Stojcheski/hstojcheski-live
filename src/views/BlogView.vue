@@ -18,29 +18,20 @@
         <p>No blog posts available at the moment.</p>
       </div>
       <div v-else class="blog-list">
-        <article v-for="post in blogPosts" :key="post.id" class="blog-card">
+        <article v-for="post in blogPosts" :key="post._id" class="blog-card">
           <h2 class="blog-title">
-            <router-link :to="`/blog/${post.id}`">{{ post.title }}</router-link>
+            <router-link :to="`/blog/${post.slug}`">{{ post.title }}</router-link>
           </h2>
-          <p class="blog-date">{{ post.date }}</p>
+          <div class="blog-meta">
+            <span class="blog-date">{{ formatDate(post.publishedAt || post.createdAt) }}</span>
+            <span class="blog-readtime">{{ post.readTime }}</span>
+            <span v-if="post.tags && post.tags.length" class="blog-tags">
+              <span v-for="tag in post.tags" :key="tag" class="tag">{{ tag }}</span>
+            </span>
+          </div>
           <p class="blog-summary">{{ post.summary }}</p>
-          <router-link :to="`/blog/${post.id}`" class="read-more">Read more →</router-link>
+          <router-link :to="`/blog/${post.slug}`" class="read-more">Read more →</router-link>
         </article>
-      </div>
-
-      <!-- Add this for debugging -->
-      <div
-        class="debug"
-        style="margin-top: 3rem; padding: 1rem; background: #f8f8f8; border-radius: 4px"
-      >
-        <h3>Debug Information</h3>
-        <p>Loading: {{ loading }}</p>
-        <p>Error: {{ error }}</p>
-        <p>Posts count: {{ blogPosts.length }}</p>
-        <button @click="togglePostsDetails" class="btn">
-          {{ showPostsDetails ? 'Hide' : 'Show' }} Posts Details
-        </button>
-        <pre v-if="showPostsDetails">{{ JSON.stringify(blogPosts, null, 2) }}</pre>
       </div>
     </div>
   </div>
@@ -48,29 +39,28 @@
 
 <script lang="ts" setup>
 import { useBlogStore } from '@/stores/BlogStore'
-import { onMounted, computed, ref } from 'vue'
+import { onMounted, computed } from 'vue'
 
 const blogStore = useBlogStore()
-const blogPosts = computed(() => {
-  const posts = blogStore.getAllPosts
-  console.log('BlogPosts in component:', posts)
-  return posts
-})
+const blogPosts = computed(() => blogStore.getPublishedPosts)
 const loading = computed(() => blogStore.loading)
 const error = computed(() => blogStore.error)
-const showPostsDetails = ref(false)
 
-const togglePostsDetails = () => {
-  showPostsDetails.value = !showPostsDetails.value
+const formatDate = (dateString: string) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 }
 
 const reloadPosts = () => {
-  console.log('Reloading posts...')
   blogStore.fetchPosts()
 }
 
 onMounted(() => {
-  console.log('BlogView mounted, fetching posts...')
   blogStore.fetchPosts()
 })
 </script>
@@ -119,6 +109,11 @@ h1 {
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
 }
 
 .blog-title {
@@ -135,10 +130,39 @@ h1 {
   color: #41b883;
 }
 
-.blog-date {
+.blog-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
   font-size: 0.9rem;
   color: #666;
-  margin-bottom: 1rem;
+}
+
+.blog-date {
+  position: relative;
+}
+
+.blog-date::after {
+  content: '•';
+  margin-left: 0.5rem;
+}
+
+.blog-readtime {
+  font-style: italic;
+}
+
+.blog-tags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag {
+  background-color: #f0f8f4;
+  color: #41b883;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
 }
 
 .blog-summary {
@@ -156,26 +180,14 @@ h1 {
   text-decoration: underline;
 }
 
-pre {
-  background-color: #f1f1f1;
-  padding: 1rem;
-  border-radius: 4px;
-  overflow-x: auto;
-  font-size: 0.8rem;
-  margin-top: 1rem;
-}
-
 .btn {
-  display: inline-block;
-  padding: 0.5rem 1rem;
   background-color: #41b883;
   color: white;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 600;
-  margin-top: 1rem;
   border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .btn:hover {

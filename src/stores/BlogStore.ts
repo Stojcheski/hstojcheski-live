@@ -2,179 +2,82 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-interface ContentChild {
-  type: string
-  text: string
-  bold?: boolean
-  italic?: boolean
-  underline?: boolean
-}
+const API_URL = 'http://localhost:5000/api' // Use environment variable in production
 
-interface ContentBlock {
-  type: string
-  children: ContentChild[] | ListItem[]
-  level?: number
-  format?: string
-}
-
-// Define proper types for list items
-interface ListItem {
-  type: string
-  children: ParagraphChild[]
-}
-
-interface ParagraphChild {
-  type: string
-  children: ContentChild[]
-}
-
-interface ImageFormat {
-  name: string
-  hash: string
-  ext: string
-  mime: string
-  path: string | null
-  width: number
-  height: number
-  size: number
-  sizeInBytes: number
-  url: string
-}
-
-interface ImageFormats {
-  thumbnail?: ImageFormat
-  small?: ImageFormat
-  medium?: ImageFormat
-  large?: ImageFormat
-  [key: string]: ImageFormat | undefined
-}
-
-// FeaturedImage as stored in our state
-interface FeaturedImage {
-  id: number
-  documentId?: string
-  name?: string
-  alternativeText?: string | null
-  caption?: string | null
-  width?: number
-  height?: number
-  formats?: ImageFormats
-  hash?: string
-  ext?: string
-  mime?: string
-  size?: number
-  url: string
-  previewUrl?: string | null
-  provider?: string
-  provider_metadata?: Record<string, unknown> | null
-  createdAt?: string
-  updatedAt?: string
-  publishedAt?: string
-}
-
-// Blog post model in our state
 interface BlogPost {
-  id: number
-  documentId?: string
-  Title: string
-  Content: ContentBlock[]
-  Summary: string
-  PublishDate: string
-  Slug: string
+  _id: string
+  title: string
+  content: string
+  summary: string
+  publishedAt: string
   createdAt: string
   updatedAt: string
-  publishedAt: string
-  FeaturedImage?: FeaturedImage
-}
-
-interface FormattedPost {
-  id: number
-  title: string
-  date: string
-  summary: string
-  content?: string
-  slug?: string
-  image?: string | null
+  tags: string[]
+  slug: string
+  readTime: string
+  viewCount: number
+  blogImage: string
+  isPublished: boolean
+  isDraft: boolean
+  isScheduled: boolean
+  scheduledAt: string | null
 }
 
 interface BlogState {
   posts: BlogPost[]
   currentPost: BlogPost | null
+  adminPosts: BlogPost[]
   loading: boolean
   error: string | null
 }
 
-const API_URL = 'http://localhost:1337/api'
+// Interface for Axios error response
+interface ApiError {
+  response?: {
+    data?: {
+      error?: string
+    }
+    status?: number
+    statusText?: string
+  }
+  message?: string
+}
 
 export const useBlogStore = defineStore('blog', {
   state: (): BlogState => ({
     posts: [],
     currentPost: null,
+    adminPosts: [],
     loading: false,
     error: null,
   }),
 
   actions: {
+    // Fetch all published blog posts
     async fetchPosts() {
       this.loading = true
       try {
-        console.log('Fetching posts from:', `${API_URL}/blog-posts?populate=*`)
-        const response = await axios.get(`${API_URL}/blog-posts?populate=*`)
-        console.log('API response data:', response.data)
-
-        if (response.data && response.data.data) {
-          const responseData = response.data.data
-
-          if (Array.isArray(responseData)) {
-            // Based on console logs, we know the data is already flattened
-            // Just directly use the response data
-            this.posts = responseData
-            console.log('All processed posts:', this.posts)
-          } else if (typeof responseData === 'object' && responseData !== null) {
-            // Handle single post response
-            this.posts = [responseData]
-          } else {
-            console.error('Unexpected response data structure:', responseData)
-            this.posts = []
-          }
-        } else {
-          console.error('Unexpected API response structure:', response.data)
-          this.posts = []
-        }
+        const response = await axios.get(`${API_URL}/blogs`)
+        this.posts = response.data
         this.error = null
       } catch (error) {
         console.error('Error fetching blog posts:', error)
         this.error = 'Failed to load blog posts'
-        this.posts = []
       } finally {
         this.loading = false
       }
     },
 
-    async fetchPostById(id: string | number) {
+    // Fetch a single blog post by slug
+    async fetchPostBySlug(slug: string) {
       this.loading = true
       try {
-        const response = await axios.get(`${API_URL}/blog-posts/${id}?populate=*`)
-        console.log('Post detail response:', response.data)
-
-        if (response.data && response.data.data) {
-          // Transform the data to match our expected structure
-          const postData = response.data.data
-          if ('id' in postData) {
-            // The data is already flattened as seen in logs
-            this.currentPost = postData
-            console.log('Processed post by ID:', this.currentPost)
-          } else {
-            this.currentPost = null
-          }
-        } else {
-          this.currentPost = null
-        }
-
+        const response = await axios.get(`${API_URL}/blogs/slug/${slug}`)
+        this.currentPost = response.data
         this.error = null
         return this.currentPost
       } catch (error) {
-        console.error(`Error fetching blog post with id ${id}:`, error)
+        console.error(`Error fetching blog post with slug ${slug}:`, error)
         this.error = 'Failed to load blog post'
         this.currentPost = null
         return null
@@ -182,108 +85,118 @@ export const useBlogStore = defineStore('blog', {
         this.loading = false
       }
     },
+
+    // Admin functions - these will be protected in the UI
+
+    // Fetch all blog posts for admin (including drafts)
+    async fetchAdminPosts() {
+      this.loading = true
+      try {
+        const response = await axios.get(`${API_URL}/blogs/admin`)
+        this.adminPosts = response.data
+        this.error = null
+      } catch (error) {
+        console.error('Error fetching admin blog posts:', error)
+        this.error = 'Failed to load blog posts'
+      } finally {
+        this.loading = false
+      }
+    },
+
+    // Create a new blog post
+    async createPost(postData: Partial<BlogPost>) {
+      this.loading = true
+      try {
+        const response = await axios.post(`${API_URL}/blogs`, postData)
+        // Add the new post to adminPosts if we have them loaded
+        if (this.adminPosts.length) {
+          this.adminPosts.unshift(response.data)
+        }
+        this.error = null
+        return response.data
+      } catch (error: unknown) {
+        const apiError = error as ApiError
+        console.error('Error creating blog post:', apiError)
+        this.error = apiError.response?.data?.error || 'Failed to create blog post'
+        return null
+      } finally {
+        this.loading = false
+      }
+    },
+
+    // Update an existing blog post
+    async updatePost(id: string, postData: Partial<BlogPost>) {
+      this.loading = true
+      try {
+        const response = await axios.put(`${API_URL}/blogs/${id}`, postData)
+
+        // Update the post in our stores if it exists
+        const indexInAdminPosts = this.adminPosts.findIndex((p) => p._id === id)
+        if (indexInAdminPosts !== -1) {
+          this.adminPosts[indexInAdminPosts] = response.data
+        }
+
+        const indexInPosts = this.posts.findIndex((p) => p._id === id)
+        if (indexInPosts !== -1) {
+          this.posts[indexInPosts] = response.data
+        }
+
+        if (this.currentPost && this.currentPost._id === id) {
+          this.currentPost = response.data
+        }
+
+        this.error = null
+        return response.data
+      } catch (error: unknown) {
+        const apiError = error as ApiError
+        console.error(`Error updating blog post with id ${id}:`, apiError)
+        this.error = apiError.response?.data?.error || 'Failed to update blog post'
+        return null
+      } finally {
+        this.loading = false
+      }
+    },
+
+    // Delete a blog post
+    async deletePost(id: string) {
+      this.loading = true
+      try {
+        await axios.delete(`${API_URL}/blogs/${id}`)
+
+        // Remove the post from our stores if it exists
+        this.adminPosts = this.adminPosts.filter((p) => p._id !== id)
+        this.posts = this.posts.filter((p) => p._id !== id)
+
+        if (this.currentPost && this.currentPost._id === id) {
+          this.currentPost = null
+        }
+
+        this.error = null
+        return true
+      } catch (error) {
+        console.error(`Error deleting blog post with id ${id}:`, error)
+        this.error = 'Failed to delete blog post'
+        return false
+      } finally {
+        this.loading = false
+      }
+    },
   },
 
   getters: {
-    getAllPosts: (state): FormattedPost[] => {
-      return state.posts.map((post: BlogPost) => {
-        return {
-          id: post.id,
-          title: post.Title || 'Untitled',
-          date: post.publishedAt
-            ? new Date(post.publishedAt).toLocaleDateString()
-            : new Date().toLocaleDateString(),
-          summary: post.Summary || 'No summary available',
-          slug: post.Slug || '',
-          image: post.FeaturedImage?.url || null,
-        }
-      })
+    // Get all published posts
+    getPublishedPosts: (state) => {
+      return state.posts
     },
 
-    getPostById:
-      (state) =>
-      (id: string | number): FormattedPost | null => {
-        // Find post by id
-        const post =
-          state.posts.find((p: BlogPost) => p.id === Number(id)) ||
-          (state.currentPost && state.currentPost.id === Number(id) ? state.currentPost : null)
+    // Get a single post by slug
+    getPostBySlug: (state) => (slug: string) => {
+      return state.posts.find((post) => post.slug === slug) || null
+    },
 
-        if (!post) return null
-
-        // Process content to create HTML
-        let content = ''
-        if (post.Content && Array.isArray(post.Content)) {
-          content = post.Content.map((block: ContentBlock) => {
-            if (block.type === 'paragraph') {
-              return `<p>${(block.children as ContentChild[])
-                ?.map((child: ContentChild) => {
-                  let textContent = child.text || ''
-                  if (child.bold) textContent = `<strong>${textContent}</strong>`
-                  if (child.italic) textContent = `<em>${textContent}</em>`
-                  if (child.underline) textContent = `<u>${textContent}</u>`
-                  return textContent
-                })
-                .join('')}</p>`
-            }
-
-            if (block.type === 'heading') {
-              const level = block.level || 2
-              return `<h${level}>${(block.children as ContentChild[])?.map((child: ContentChild) => child.text || '').join('')}</h${level}>`
-            }
-
-            if (block.type === 'list') {
-              const listType = block.format === 'ordered' ? 'ol' : 'ul'
-
-              // Try to recursively process list items
-              const processListChildren = (children: ListItem[]): string => {
-                return children
-                  .map((child) => {
-                    if (child.type === 'list-item') {
-                      let itemContent = ''
-                      if (child.children && child.children.length) {
-                        // Process the children of the list item
-                        itemContent = child.children
-                          .map((itemChild: ParagraphChild) => {
-                            if (itemChild.type === 'paragraph' && itemChild.children) {
-                              return itemChild.children
-                                .map((c: ContentChild) => c.text || '')
-                                .join('')
-                            }
-                            return ''
-                          })
-                          .join('')
-                      }
-                      return `<li>${itemContent}</li>`
-                    }
-                    return ''
-                  })
-                  .join('')
-              }
-
-              if (block.children && block.children.length) {
-                return `<${listType}>${processListChildren(block.children as ListItem[])}</${listType}>`
-              }
-
-              return `<${listType}></${listType}>`
-            }
-
-            return '' // Return empty string for unhandled block types
-          }).join('')
-        }
-
-        return {
-          id: post.id,
-          title: post.Title || 'Untitled',
-          date: post.PublishDate
-            ? new Date(post.PublishDate).toLocaleDateString()
-            : post.publishedAt
-              ? new Date(post.publishedAt).toLocaleDateString()
-              : new Date().toLocaleDateString(),
-          summary: post.Summary || 'No summary available',
-          content: content,
-          slug: post.Slug || '',
-          image: post.FeaturedImage?.url || null,
-        }
-      },
+    // Get admin posts (including drafts)
+    getAdminPosts: (state) => {
+      return state.adminPosts
+    },
   },
 })

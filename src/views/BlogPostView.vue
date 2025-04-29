@@ -14,10 +14,16 @@
       <div class="container">
         <div class="blog-header">
           <h1>{{ post.title }}</h1>
-          <p class="date">{{ post.date }}</p>
+          <div class="blog-meta">
+            <span class="blog-date">{{ formatDate(post.publishedAt || post.createdAt) }}</span>
+            <span class="blog-readtime">{{ post.readTime }}</span>
+            <span v-if="post.tags && post.tags.length" class="blog-tags">
+              <span v-for="tag in post.tags" :key="tag" class="tag">{{ tag }}</span>
+            </span>
+          </div>
         </div>
 
-        <div class="blog-content" v-html="post.content"></div>
+        <div class="blog-content" v-html="renderContent(post.content)"></div>
 
         <div class="blog-footer">
           <router-link to="/blog" class="back-link">← Back to all articles</router-link>
@@ -28,75 +34,53 @@
     <div v-else class="not-found">
       <div class="container">
         <h1>Post Not Found</h1>
-        <p>The blog post you're looking for doesn't exist.</p>
+        <p>The blog post you're looking for doesn't exist or has been removed.</p>
         <router-link to="/blog" class="btn">Back to Blog</router-link>
-      </div>
-    </div>
-
-    <!-- Add this for debugging -->
-    <div class="container">
-      <div
-        class="debug"
-        style="margin-top: 3rem; padding: 1rem; background: #f8f8f8; border-radius: 4px"
-      >
-        <h3>Debug Information</h3>
-        <p>Post ID: {{ postId }}</p>
-        <p>Loading: {{ loading }}</p>
-        <p>Error: {{ error }}</p>
-        <p>Post found: {{ post ? 'Yes' : 'No' }}</p>
-        <button @click="togglePostDetails" class="btn">
-          {{ showPostDetails ? 'Hide' : 'Show' }} Post Details
-        </button>
-        <pre v-if="showPostDetails">{{ JSON.stringify(post, null, 2) }}</pre>
-
-        <h4 style="margin-top: 1rem">Raw Current Post</h4>
-        <button @click="toggleRawPost" class="btn">
-          {{ showRawPost ? 'Hide' : 'Show' }} Raw Post
-        </button>
-        <pre v-if="showRawPost">{{ JSON.stringify(blogStore.currentPost, null, 2) }}</pre>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBlogStore } from '@/stores/BlogStore'
 
 const route = useRoute()
 const blogStore = useBlogStore()
-const showPostDetails = ref(false)
-const showRawPost = ref(false)
-
 const loading = computed(() => blogStore.loading)
 const error = computed(() => blogStore.error)
 
-// Get post ID from route
-const postId = computed(() => {
-  const id = route.params.id
-  return Array.isArray(id) ? id[0] : id
-})
+// Get post slug from route
+const slug = computed(() => route.params.slug as string)
 
+// Fetch the post and watch for changes
 const post = computed(() => {
-  const result = blogStore.getPostById(postId.value)
-  console.log('Post computed result:', result)
-  return result
+  return blogStore.currentPost
 })
 
-const togglePostDetails = () => {
-  showPostDetails.value = !showPostDetails.value
+// Format date for display
+const formatDate = (dateString: string) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 }
 
-const toggleRawPost = () => {
-  showRawPost.value = !showRawPost.value
+// Function to render content with proper formatting
+// This is a simple version - in a real app, you might use a markdown parser
+const renderContent = (content: string) => {
+  // For now, we'll assume content is stored as HTML
+  return content
 }
 
+// Fetch the post when component is mounted
 onMounted(async () => {
-  console.log('BlogPostView mounted, fetching post with ID:', postId.value)
-  // Fetch the post if needed
-  if (!post.value) {
-    await blogStore.fetchPostById(postId.value)
+  if (slug.value) {
+    await blogStore.fetchPostBySlug(slug.value)
   }
 })
 </script>
@@ -122,19 +106,49 @@ onMounted(async () => {
 }
 
 .blog-header {
-  margin-bottom: 2rem;
+  margin-bottom: A2rem;
 }
 
 h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   color: #333;
 }
 
-.date {
-  font-size: 1rem;
+.blog-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.9rem;
   color: #666;
+  margin-bottom: 2rem;
+}
+
+.blog-date {
+  position: relative;
+}
+
+.blog-date::after {
+  content: '•';
+  margin-left: 0.5rem;
+}
+
+.blog-readtime {
+  font-style: italic;
+}
+
+.blog-tags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag {
+  background-color: #f0f8f4;
+  color: #41b883;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
 }
 
 .blog-content {
@@ -143,26 +157,66 @@ h1 {
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
+  line-height: 1.7;
 }
 
+/* Styles for rendered content */
 .blog-content :deep(h2) {
   font-size: 1.8rem;
+  margin: 1.5rem 0 1rem;
   color: #41b883;
-  margin: 2rem 0 1rem;
 }
 
 .blog-content :deep(h3) {
   font-size: 1.4rem;
-  margin: 1.5rem 0 0.75rem;
+  margin: 1.5rem 0 1rem;
 }
 
 .blog-content :deep(p) {
   margin-bottom: 1.5rem;
-  line-height: 1.7;
+}
+
+.blog-content :deep(a) {
+  color: #41b883;
+  text-decoration: underline;
+}
+
+.blog-content :deep(ul),
+.blog-content :deep(ol) {
+  margin-bottom: 1.5rem;
+  margin-left: 2rem;
+}
+
+.blog-content :deep(li) {
+  margin-bottom: 0.5rem;
+}
+
+.blog-content :deep(blockquote) {
+  padding-left: 1rem;
+  border-left: 4px solid #41b883;
+  font-style: italic;
+  margin: 1.5rem 0;
+  color: #666;
+}
+
+.blog-content :deep(pre) {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.blog-content :deep(code) {
+  font-family: monospace;
+  background-color: #f5f5f5;
+  padding: 0.2rem 0.4rem;
+  border-radius: 2px;
 }
 
 .blog-footer {
   text-align: center;
+  margin-top: 3rem;
 }
 
 .back-link {
@@ -178,28 +232,18 @@ h1 {
 }
 
 .btn {
-  display: inline-block;
-  padding: 0.5rem 1rem;
   background-color: #41b883;
   color: white;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 600;
-  margin-top: 1rem;
   border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
   cursor: pointer;
+  font-weight: 600;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .btn:hover {
   background-color: #349268;
-}
-
-pre {
-  background-color: #f1f1f1;
-  padding: 1rem;
-  border-radius: 4px;
-  overflow-x: auto;
-  font-size: 0.8rem;
-  margin-top: 1rem;
 }
 </style>

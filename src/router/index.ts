@@ -46,6 +46,35 @@ const router = createRouter({
       name: 'contact',
       component: () => import('../views/ContactView.vue'),
     },
+    {
+      path: '/admin/login',
+      name: 'admin-login',
+      component: () => import('../views/admin/AdminLoginView.vue'),
+    },
+    {
+      path: '/admin',
+      name: 'admin-dashboard',
+      component: () => import('../views/admin/AdminDashboardView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/admin/blog',
+      name: 'admin-blog',
+      component: () => import('../views/admin/AdminBlogView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/admin/blog/new',
+      name: 'admin-blog-new',
+      component: () => import('../views/admin/AdminBlogEditView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/admin/blog/edit/:id',
+      name: 'admin-blog-edit',
+      component: () => import('../views/admin/AdminBlogEditView.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
@@ -54,6 +83,18 @@ const router = createRouter({
       return { top: 0 }
     }
   },
+})
+
+// Navigation guard for protected routes
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
+
+  if (requiresAuth && !isAuthenticated) {
+    next('/admin/login')
+  } else {
+    next()
+  }
 })
 
 export default router

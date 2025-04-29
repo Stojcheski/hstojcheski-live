@@ -1,13 +1,18 @@
+// hstojcheski-live-backend/server.js
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import Blog from './models/blog.js'
+
+// Import route files
+import authRoutes from './routes/auth.js'
+import blogRoutes from './routes/blog.js'
 
 dotenv.config()
 
 const app = express()
 
+// Middleware
 app.use(express.json())
 app.use(cors())
 
@@ -17,28 +22,13 @@ mongoose
   .then(() => console.log('MongoDB connected successfully'))
   .catch((err) => console.log('Error connecting to MongoDB:', err))
 
-// Route to get all blogs
-app.get('/blogs', async (req, res) => {
-  try {
-    const blogs = await Blog.find()
-    res.json(blogs)
-  } catch (err) {
-    console.log(err) // Log the error
-    res.status(500).send('Error fetching blogs')
-  }
-})
+// Use routes
+app.use('/api/auth', authRoutes)
+app.use('/api/blogs', blogRoutes)
 
-// Route to create a new blog
-app.post('/blogs', async (req, res) => {
-  try {
-    const { title, content } = req.body
-    const newBlog = new Blog({ title, content })
-    await newBlog.save()
-    res.status(201).json(newBlog)
-  } catch (err) {
-    console.log(err) // Log the error
-    res.status(400).send('Error creating blog')
-  }
+// Root route for testing
+app.get('/', (req, res) => {
+  res.send('API is running...')
 })
 
 // Start the server
