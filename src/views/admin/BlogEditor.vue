@@ -1,321 +1,277 @@
+<!-- File location: src/views/admin/BlogEditor.vue -->
 <template>
-  <div class="blog-editor">
-    <div class="container">
-      <h1>{{ isEditMode ? 'Edit Blog Post' : 'Create New Blog Post' }}</h1>
-
-      <div v-if="error" class="error-message">
-        {{ error }}
-      </div>
-
-      <div class="editor-form">
-        <div class="form-group">
-          <label for="title">Title</label>
-          <input
-            type="text"
-            id="title"
-            v-model="post.title"
-            class="form-control"
-            placeholder="Enter blog title"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="summary">Summary</label>
-          <textarea
-            id="summary"
-            v-model="post.summary"
-            class="form-control"
-            rows="3"
-            placeholder="Enter a brief summary"
-            required
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="content">Content</label>
-          <textarea
-            id="content"
-            v-model="post.content"
-            class="form-control"
-            rows="15"
-            placeholder="Write your blog post content here..."
-            required
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="slug">Slug</label>
-          <input
-            type="text"
-            id="slug"
-            v-model="post.slug"
-            class="form-control"
-            placeholder="blog-post-url-slug"
-            required
-          />
-          <small class="form-text"
-            >This will be used in the URL: hstojcheski.live/blog/your-slug-here</small
-          >
-        </div>
-
-        <div class="form-group">
-          <label for="tags">Tags (comma separated)</label>
-          <input
-            type="text"
-            id="tags"
-            v-model="tagsInput"
-            class="form-control"
-            placeholder="salesforce, apex, development, etc."
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="image">Featured Image URL</label>
-          <input
-            type="text"
-            id="image"
-            v-model="post.image"
-            class="form-control"
-            placeholder="https://example.com/image.jpg"
-          />
-        </div>
-
-        <div class="form-actions">
-          <button @click="savePost" class="btn btn-primary" :disabled="isSubmitting">
-            {{ isSubmitting ? 'Saving...' : isEditMode ? 'Update Post' : 'Publish Post' }}
-          </button>
-          <button @click="cancel" class="btn btn-secondary" :disabled="isSubmitting">Cancel</button>
-        </div>
-      </div>
+  <section class="section container">
+    <div class="form-header">
+      <h1 class="editor-title">{{ isEditMode ? 'Edit Blog Post' : 'Create New Blog Post' }}</h1>
     </div>
-  </div>
+
+    <form v-if="!isEditMode || loaded" @submit.prevent="submitBlog" class="blog-form">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input id="title" class="sm-input" type="text" v-model="form.title" required />
+      </div>
+
+      <div class="form-group">
+        <label for="summary">Summary</label>
+        <textarea id="summary" v-model="form.summary" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="content">Content</label>
+        <textarea id="content" v-model="form.content" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="tags">Tags (comma-separated)</label>
+        <input id="tags" class="sm-input" type="text" v-model="form.tags" />
+      </div>
+
+      <div class="checkbox-row grouped">
+        <div class="form-checkbox">
+          <input
+            id="isPublished"
+            type="checkbox"
+            v-model="form.isPublished"
+            :disabled="form.isDraft || form.isScheduled"
+          />
+          <label for="isPublished">Publish immediately</label>
+        </div>
+
+        <div class="form-checkbox">
+          <input
+            id="isDraft"
+            type="checkbox"
+            v-model="form.isDraft"
+            :disabled="form.isPublished || form.isScheduled"
+          />
+          <label for="isDraft">Save as draft</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-checkbox">
+          <input
+            id="isScheduled"
+            type="checkbox"
+            v-model="form.isScheduled"
+            :disabled="form.isPublished || form.isDraft"
+          />
+          <label for="isScheduled">Schedule post</label>
+        </div>
+      </div>
+
+      <div v-if="form.isScheduled" class="form-group">
+        <label for="scheduledAt">Scheduled Date & Time</label>
+        <input
+          id="scheduledAt"
+          type="text"
+          v-model="form.scheduledAt"
+          placeholder="DD/MM/YYYY, HH:MM"
+        />
+      </div>
+
+      <div class="button-container">
+        <button type="submit" class="btn btn-primary">
+          {{ isEditMode ? 'Update Blog' : 'Save Blog' }}
+        </button>
+      </div>
+    </form>
+
+    <div v-if="toast.visible" :class="['toast', toast.success ? 'toast-success' : 'toast-error']">
+      {{ toast.message }}
+    </div>
+  </section>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+<script lang="ts">
+import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 
-const route = useRoute()
-const router = useRouter()
-const API_URL = 'http://localhost:5000'
+export default defineComponent({
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
+    const blogId = route.params.id as string | undefined
+    const isEditMode = computed(() => !!blogId)
+    const loaded = ref(false)
 
-// State
-const post = ref({
-  title: '',
-  summary: '',
-  content: '',
-  slug: '',
-  tags: [] as string[],
-  image: '',
-  isPublished: false,
-})
-const tagsInput = ref('')
-const error = ref('')
-const isSubmitting = ref(false)
-const isEditMode = computed(() => !!route.params.id)
+    const form = ref({
+      title: '',
+      summary: '',
+      content: '',
+      tags: '',
+      isPublished: false,
+      isDraft: false,
+      isScheduled: false,
+      scheduledAt: '',
+    })
 
-// Get post if in edit mode
-onMounted(async () => {
-  if (isEditMode.value) {
-    try {
-      const postId = route.params.id
-      const response = await axios.get(`${API_URL}/blogs/${postId}`)
-      const loadedPost = response.data
+    const toast = ref({ visible: false, message: '', success: true })
 
-      post.value = {
-        title: loadedPost.title || '',
-        summary: loadedPost.summary || '',
-        content: loadedPost.content || '',
-        slug: loadedPost.slug || '',
-        tags: loadedPost.tags || [],
-        image: loadedPost.blogImage || '',
-        isPublished: loadedPost.isPublished || false,
+    const showToast = (msg: string, success = true) => {
+      toast.value = { visible: true, message: msg, success }
+      setTimeout(() => (toast.value.visible = false), 3000)
+    }
+
+    const generateSlug = (title: string) => {
+      return title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+    }
+
+    const fetchBlog = async () => {
+      if (!blogId) return
+      try {
+        const apiBase = import.meta.env.MODE === 'development' ? 'http://localhost:5000' : ''
+        const { data } = await axios.get(`${apiBase}/api/blogs/${blogId}`)
+
+        form.value = {
+          title: data.title || '',
+          summary: data.summary || '',
+          content: data.content || '',
+          tags: (data.tags || []).join(', '),
+          isPublished: data.isPublished || false,
+          isDraft: data.isDraft || false,
+          isScheduled: data.isScheduled || false,
+          scheduledAt: data.scheduledAt || '',
+        }
+        loaded.value = true
+      } catch (error: any) {
+        showToast('Failed to load blog. Error: ' + error, false)
       }
-
-      // Convert tags array to string for the input
-      tagsInput.value = post.value.tags.join(', ')
-    } catch (err) {
-      console.error('Error loading post:', err)
-      error.value = 'Failed to load the blog post. Please try again later.'
     }
-  }
+
+    const submitBlog = async () => {
+      try {
+        const apiBase = import.meta.env.MODE === 'development' ? 'http://localhost:5000' : ''
+        const payload = {
+          ...form.value,
+          tags: form.value.tags.split(',').map((t) => t.trim()),
+          blogImage: 'placeholder.jpg',
+          readTime: `${Math.max(1, Math.ceil(form.value.content.trim().split(/\s+/).length / 200))} min read`,
+          author: import.meta.env.VITE_DEFAULT_AUTHOR_ID,
+        }
+
+        if (isEditMode.value) {
+          await axios.put(`${apiBase}/api/blogs/${blogId}`, payload)
+          showToast('Blog updated successfully!', true)
+        } else {
+          Object.assign(payload, { slug: generateSlug(form.value.title) })
+          await axios.post(`${apiBase}/api/blogs`, payload)
+          showToast('Blog saved successfully!', true)
+        }
+
+        setTimeout(() => router.push('/admin/blog/list'), 1500)
+      } catch (error: any) {
+        const msg = 'Something went wrong. Error: ' + error
+        showToast(msg, false)
+      }
+    }
+
+    onMounted(() => {
+      if (isEditMode.value) fetchBlog()
+    })
+
+    return { form, submitBlog, toast, loaded, isEditMode }
+  },
 })
-
-// Helper to create slug from title
-const createSlugFromTitle = (title: string): string => {
-  return title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-}
-
-// Auto-generate slug when title changes if slug is empty
-const updateSlugFromTitle = () => {
-  if (!post.value.slug && post.value.title) {
-    post.value.slug = createSlugFromTitle(post.value.title)
-  }
-}
-
-// Save post
-const savePost = async () => {
-  // Process tags from comma-separated string to array
-  post.value.tags = tagsInput.value
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter((tag) => tag !== '')
-
-  // Auto-generate slug if empty
-  if (!post.value.slug) {
-    post.value.slug = createSlugFromTitle(post.value.title)
-  }
-
-  // Validate required fields
-  if (!post.value.title || !post.value.content || !post.value.summary || !post.value.slug) {
-    error.value = 'Please fill in all required fields: title, summary, content, and slug.'
-    return
-  }
-
-  try {
-    isSubmitting.value = true
-
-    if (isEditMode.value) {
-      // Update existing post
-      await axios.put(`${API_URL}/blogs/${route.params.id}`, post.value)
-    } else {
-      // Create new post
-      await axios.post(`${API_URL}/blogs`, post.value)
-    }
-
-    router.push('/admin/blog')
-  } catch (err) {
-    console.error('Error saving post:', err)
-    error.value = `Failed to ${isEditMode.value ? 'update' : 'create'} the blog post. Please try again later.`
-  } finally {
-    isSubmitting.value = false
-  }
-}
-
-// Cancel and go back
-const cancel = () => {
-  router.push('/admin/blog')
-}
-
-// Watch for title changes to update slug
-const handleTitleChange = () => {
-  if (!post.value.slug || post.value.slug === createSlugFromTitle(post.value.title)) {
-    post.value.slug = createSlugFromTitle(post.value.title)
-  }
-}
 </script>
 
 <style scoped>
-.blog-editor {
-  padding: 2rem 0;
+.editor-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-h1 {
-  font-size: 2.2rem;
+.form-header {
+  text-align: center;
   margin-bottom: 2rem;
-  color: #333;
 }
 
-.editor-form {
-  background-color: white;
-  border-radius: 8px;
+.blog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: var(--color-background-soft);
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-row.grouped {
+  display: flex;
+  justify-content: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+input[type='text'],
+textarea {
+  resize: vertical;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.sm-input {
+  height: 2.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.2;
 }
 
 label {
-  display: block;
+  font-weight: bold;
   margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #333;
+  color: var(--color-heading);
 }
 
-.form-control {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 1rem;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #41b883;
-  box-shadow: 0 0 0 2px rgba(65, 184, 131, 0.2);
-}
-
-textarea.form-control {
-  resize: vertical;
-}
-
-.form-text {
-  display: block;
-  margin-top: 0.25rem;
-  font-size: 0.85rem;
-  color: #6c757d;
-}
-
-.form-actions {
+.form-checkbox {
   display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.btn {
-  padding: 0.75rem 1.5rem;
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 1rem 1.25rem;
   border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-}
-
-.btn-primary {
-  background-color: #41b883;
   color: white;
+  font-weight: bold;
+  z-index: 999;
+}
+.toast-success {
+  background-color: #4caf50;
+}
+.toast-error {
+  background-color: #f44336;
 }
 
-.btn-primary:hover:not(:disabled) {
-  background-color: #349268;
-}
-
-.btn-secondary {
-  background-color: #f2f2f2;
-  color: #333;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: #e0e0e0;
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.error-message {
-  padding: 0.75rem;
-  margin-bottom: 1.5rem;
-  background-color: #f8d7da;
-  color: #721c24;
-  border-radius: 4px;
-  border: 1px solid #f5c6cb;
+textarea {
+  min-height: 120px;
 }
 </style>

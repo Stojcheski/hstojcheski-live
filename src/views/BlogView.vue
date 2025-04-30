@@ -1,196 +1,90 @@
-<!-- src/views/BlogView.vue -->
-<template>
-  <div class="blog">
-    <div class="container">
-      <h1>Blog</h1>
-      <p class="intro">
-        I write about Salesforce development, best practices, and industry insights.
-      </p>
+<!-- File location: src/views/BlogView.vue -->
 
-      <div v-if="loading" class="loading">
-        <p>Loading blog posts...</p>
-      </div>
-      <div v-else-if="error" class="error">
-        <p>{{ error }}</p>
-        <button @click="reloadPosts" class="btn">Try Again</button>
-      </div>
-      <div v-else-if="blogPosts.length === 0" class="no-posts">
-        <p>No blog posts available at the moment.</p>
-      </div>
-      <div v-else class="blog-list">
-        <article v-for="post in blogPosts" :key="post._id" class="blog-card">
-          <h2 class="blog-title">
-            <router-link :to="`/blog/${post.slug}`">{{ post.title }}</router-link>
-          </h2>
-          <div class="blog-meta">
-            <span class="blog-date">{{ formatDate(post.publishedAt || post.createdAt) }}</span>
-            <span class="blog-readtime">{{ post.readTime }}</span>
-            <span v-if="post.tags && post.tags.length" class="blog-tags">
-              <span v-for="tag in post.tags" :key="tag" class="tag">{{ tag }}</span>
-            </span>
-          </div>
-          <p class="blog-summary">{{ post.summary }}</p>
-          <router-link :to="`/blog/${post.slug}`" class="read-more">Read more →</router-link>
-        </article>
+<template>
+  <section class="section container">
+    <div class="section-heading">
+      <h1>Blog Articles</h1>
+    </div>
+
+    <div v-if="isLoading" class="text-center mt-5">
+      <p>Loading blogs...</p>
+    </div>
+
+    <div v-else-if="isError" class="text-center mt-5">
+      <p>Error loading blogs: {{ errorMessage }}</p>
+    </div>
+
+    <div v-else-if="blogs.length === 0" class="text-center mt-5">
+      <p>No blogs found.</p>
+    </div>
+
+    <div v-else class="blog-list">
+      <div v-for="blog in blogs" :key="blog._id" class="blog-card">
+        <h2>{{ blog.title }}</h2>
+        <p class="mb-1"><strong>Author:</strong> {{ blog.author.username || 'Unknown' }}</p>
+        <p class="mb-1"><strong>Published:</strong> {{ formatDate(blog.createdAt) }}</p>
+        <p class="mb-2"><strong>Summary:</strong> {{ blog.summary }}</p>
+        <p>{{ previewContent(blog.content) }}</p>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent, onMounted } from 'vue'
 import { useBlogStore } from '@/stores/BlogStore'
-import { onMounted, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 
-const blogStore = useBlogStore()
-const blogPosts = computed(() => blogStore.getPublishedPosts)
-const loading = computed(() => blogStore.loading)
-const error = computed(() => blogStore.error)
+export default defineComponent({
+  setup() {
+    const blogStore = useBlogStore()
+    const { blogs, isLoading, isError, errorMessage } = storeToRefs(blogStore)
 
-const formatDate = (dateString: string) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
+    onMounted(() => {
+      blogStore.fetchBlogs()
+    })
 
-const reloadPosts = () => {
-  blogStore.fetchPosts()
-}
+    const formatDate = (dateString: string) => {
+      const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
+      return new Date(dateString).toLocaleDateString(undefined, options)
+    }
 
-onMounted(() => {
-  blogStore.fetchPosts()
+    const previewContent = (content: string) => {
+      if (!content) return ''
+      return content.length > 100 ? content.slice(0, 100) + '...' : content
+    }
+
+    return { blogs, isLoading, isError, errorMessage, formatDate, previewContent }
+  },
 })
 </script>
 
 <style scoped>
-.blog {
-  padding: 3rem 0;
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #333;
-  text-align: center;
-}
-
-.intro {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 3rem;
-}
-
-.loading,
-.error,
-.no-posts {
-  text-align: center;
-  padding: 2rem;
-}
-
 .blog-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
+  margin-top: 2rem;
 }
 
 .blog-card {
-  background-color: white;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  background-color: var(--color-background-soft);
+  transition: box-shadow 0.3s;
 }
 
 .blog-card:hover {
-  transform: translateY(-5px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-.blog-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.blog-title a {
-  color: #333;
-  text-decoration: none;
-}
-
-.blog-title a:hover {
-  color: #41b883;
-}
-
-.blog-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.blog-card h2 {
+  color: var(--color-heading);
   margin-bottom: 1rem;
-  font-size: 0.9rem;
-  color: #666;
 }
 
-.blog-date {
-  position: relative;
-}
-
-.blog-date::after {
-  content: '•';
-  margin-left: 0.5rem;
-}
-
-.blog-readtime {
-  font-style: italic;
-}
-
-.blog-tags {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.tag {
-  background-color: #f0f8f4;
-  color: #41b883;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-
-.blog-summary {
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-}
-
-.read-more {
-  color: #41b883;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.read-more:hover {
-  text-decoration: underline;
-}
-
-.btn {
-  background-color: #41b883;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn:hover {
-  background-color: #349268;
+.blog-card p {
+  color: var(--color-text);
 }
 </style>

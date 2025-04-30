@@ -1,4 +1,4 @@
-// hstojcheski-live-backend/routes/blog.js
+// hstojcheski-live-backend/routes/blogs.js
 import express from 'express'
 import Blog from '../models/blog.js'
 
@@ -7,33 +7,29 @@ const router = express.Router()
 // Get all published blog posts
 router.get('/', async (req, res) => {
   try {
-    const blogs = await Blog.find({
-      isPublished: true,
-      isDraft: false,
-      isDeleted: false,
-    })
-      .sort({ publishedAt: -1 }) // Sort by publish date, newest first
-      .select('-comments -likesCount -dislikesCount -sharesCount -bookmarksCount') // Exclude unnecessary fields for listing
+    // Find all published blog posts, sort by date descending
+    const blogs = await Blog.find({ isPublished: true, isDeleted: false })
+      .sort({ publishedAt: -1 })
+      .select('-comments -likesCount -dislikesCount -sharesCount -bookmarksCount')
 
     res.json(blogs)
   } catch (err) {
     console.error('Error fetching blogs:', err)
-    res.status(500).send('Error fetching blogs')
+    res.status(500).json({ message: 'Error fetching blogs', error: err.message })
   }
 })
 
-// Get a single blog post by slug
-router.get('/slug/:slug', async (req, res) => {
+// Get a single blog post by ID
+router.get('/:id', async (req, res) => {
   try {
     const blog = await Blog.findOne({
-      slug: req.params.slug,
+      _id: req.params.id,
       isPublished: true,
-      isDraft: false,
       isDeleted: false,
     })
 
     if (!blog) {
-      return res.status(404).send('Blog post not found')
+      return res.status(404).json({ message: 'Blog post not found' })
     }
 
     // Increment view count
@@ -42,159 +38,155 @@ router.get('/slug/:slug', async (req, res) => {
 
     res.json(blog)
   } catch (err) {
-    console.error('Error fetching blog by slug:', err)
-    res.status(500).send('Error fetching blog post')
+    console.error(`Error fetching blog with id ${req.params.id}:`, err)
+    res.status(500).json({ message: 'Error fetching blog post', error: err.message })
   }
 })
 
-// Admin routes below (these will be protected later)
-
-// Get all blog posts (including drafts) for admin
-router.get('/admin', async (req, res) => {
-  try {
-    const blogs = await Blog.find({ isDeleted: false }).sort({ updatedAt: -1 })
-
-    res.json(blogs)
-  } catch (err) {
-    console.error('Error fetching admin blogs:', err)
-    res.status(500).send('Error fetching blogs')
-  }
-})
-
-// Create a new blog post
+// Create a new blog post (protected route - requires authentication)
 router.post('/', async (req, res) => {
   try {
-    const {
-      title,
-      content,
-      summary,
-      tags,
-      author,
-      blogImage,
-      isPublished,
-      isDraft,
-      isScheduled,
-      scheduledAt,
-      slug,
-    } = req.body
+    // TODO: Add authentication middleware
+    // if (!req.user || req.user.role !== 'admin') {
+    //   return res.status(401).json({ message: 'Unauthorized' })
+    // }
 
-    // Check if slug already exists
-    const existingBlog = await Blog.findOne({ slug })
-    if (existingBlog) {
-      return res.status(400).json({ error: 'A blog post with this slug already exists' })
-    }
+    const { title, content, summary, tags, blogImage, isPublished } = req.body
 
-    // Calculate read time (simple implementation - can be improved)
+    // Calculate read time (approx. 200 words per minute)
     const wordCount = content.split(/\s+/).length
-    const readTime = Math.ceil(wordCount / 200) + ' min read' // Assuming 200 words per minute
+    const readTime = Math.ceil(wordCount / 200) + ' min read'
 
-    const blog = new Blog({
+    // Generate slug from title
+    const slug = title
+      .toLowerCase()
+      .replace(/[^\w\s]/gi, '')
+      .replace(/\s+/g, '-')
+
+    const newBlog = new Blog({
       title,
       content,
       summary,
       tags: tags || [],
-      author,
+      author: req.body.author || 'Hristijan Stojcheski', // Default author
       blogImage: blogImage || '',
       isPublished: isPublished || false,
-      isDraft: isDraft || true,
-      isScheduled: isScheduled || false,
-      scheduledAt: scheduledAt || null,
       readTime,
       slug,
-      viewCount: 0,
+      publishedAt: isPublished ? new Date() : null,
     })
 
-    await blog.save()
-    res.status(201).json(blog)
+    const savedBlog = await newBlog.save()
+    res.status(201).json(savedBlog)
   } catch (err) {
-    console.error('Error creating blog:', err)
-    res.status(400).send('Error creating blog: ' + err.message)
+    console.error('Error creating blog post:', err)
+    res.status(400).json({ message: 'Error creating blog post', error: err.message })
   }
 })
 
-// Update a blog post
+// Update a blog post (protected route)
 router.put('/:id', async (req, res) => {
   try {
-    const {
-      title,
-      content,
-      summary,
-      tags,
-      blogImage,
-      isPublished,
-      isDraft,
-      isScheduled,
-      scheduledAt,
-      slug,
-    } = req.body
+    // TODO: Add authentication middleware
+    // if (!req.user || req.user.role !== 'admin') {
+    //   return res.status(401).json({ message: 'Unauthorized' })
+    // }
 
-    // Check if slug already exists and is not the current blog post
-    if (slug) {
-      const existingBlog = await Blog.findOne({
-        slug,
-        _id: { $ne: req.params.id },
-      })
+    const { title, content, summary, tags, blogImage, isPublished } = req.body
 
-      if (existingBlog) {
-        return res.status(400).json({ error: 'A blog post with this slug already exists' })
-      }
-    }
-
-    // Calculate read time if content is provided
-    let readTime
-    if (content) {
-      const wordCount = content.split(/\s+/).length
-      readTime = Math.ceil(wordCount / 200) + ' min read'
-    }
-
-    const updateData = {
-      ...(title && { title }),
-      ...(content && { content }),
-      ...(summary && { summary }),
-      ...(tags && { tags }),
-      ...(blogImage && { blogImage }),
-      ...(isPublished !== undefined && { isPublished }),
-      ...(isDraft !== undefined && { isDraft }),
-      ...(isScheduled !== undefined && { isScheduled }),
-      ...(scheduledAt && { scheduledAt }),
-      ...(slug && { slug }),
-      ...(readTime && { readTime }),
-      updatedAt: Date.now(),
-    }
-
-    const blog = await Blog.findByIdAndUpdate(req.params.id, updateData, { new: true })
+    const blog = await Blog.findById(req.params.id)
 
     if (!blog) {
-      return res.status(404).send('Blog post not found')
+      return res.status(404).json({ message: 'Blog post not found' })
     }
 
-    res.json(blog)
+    // If title changed, update slug
+    if (title && title !== blog.title) {
+      blog.slug = title
+        .toLowerCase()
+        .replace(/[^\w\s]/gi, '')
+        .replace(/\s+/g, '-')
+    }
+
+    // If content changed, update read time
+    if (content && content !== blog.content) {
+      const wordCount = content.split(/\s+/).length
+      blog.readTime = Math.ceil(wordCount / 200) + ' min read'
+    }
+
+    // If publishing for the first time, set publishedAt date
+    if (isPublished && !blog.isPublished) {
+      blog.publishedAt = new Date()
+    }
+
+    // Update fields
+    blog.title = title || blog.title
+    blog.content = content || blog.content
+    blog.summary = summary || blog.summary
+    blog.tags = tags || blog.tags
+    blog.blogImage = blogImage || blog.blogImage
+    blog.isPublished = isPublished !== undefined ? isPublished : blog.isPublished
+    blog.updatedAt = new Date()
+
+    const updatedBlog = await blog.save()
+    res.json(updatedBlog)
   } catch (err) {
-    console.error('Error updating blog:', err)
-    res.status(400).send('Error updating blog: ' + err.message)
+    console.error(`Error updating blog with id ${req.params.id}:`, err)
+    res.status(400).json({ message: 'Error updating blog post', error: err.message })
   }
 })
 
-// Delete a blog post (soft delete)
+// Delete a blog post (protected route)
 router.delete('/:id', async (req, res) => {
   try {
+    // TODO: Add authentication middleware
+    // if (!req.user || req.user.role !== 'admin') {
+    //   return res.status(401).json({ message: 'Unauthorized' })
+    // }
+
+    // Soft delete - mark as deleted but keep in database
     const blog = await Blog.findByIdAndUpdate(
       req.params.id,
       {
         isDeleted: true,
-        deletedAt: Date.now(),
+        deletedAt: new Date(),
+        deletedBy: req.body.userId, // Store who deleted it
       },
       { new: true },
     )
 
     if (!blog) {
-      return res.status(404).send('Blog post not found')
+      return res.status(404).json({ message: 'Blog post not found' })
     }
 
     res.json({ message: 'Blog post deleted successfully' })
   } catch (err) {
-    console.error('Error deleting blog:', err)
-    res.status(500).send('Error deleting blog post')
+    console.error(`Error deleting blog with id ${req.params.id}:`, err)
+    res.status(500).json({ message: 'Error deleting blog post', error: err.message })
+  }
+})
+
+// GET single blog by slug
+router.get('/slug/:slug', async (req, res) => {
+  try {
+    const blog = await Blog.findOne({
+      slug: req.params.slug,
+      isPublished: true,
+      isDeleted: false,
+    }).populate('author', 'username') // show author info
+
+    if (!blog) {
+      return res.status(404).json({ message: 'Blog not found' })
+    }
+
+    // Optional: increment view count
+    blog.viewCount += 1
+    await blog.save()
+
+    res.json(blog)
+  } catch (err) {
+    console.error(`Error fetching blog with slug ${req.params.slug}:`, err)
+    res.status(500).json({ message: 'Error fetching blog by slug', error: err.message })
   }
 })
 

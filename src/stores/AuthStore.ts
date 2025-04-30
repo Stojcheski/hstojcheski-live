@@ -1,68 +1,112 @@
 // src/stores/AuthStore.ts
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
-const API_URL = 'http://localhost:5000/api' // Use environment variable in production
-
-interface AuthState {
-  token: string | null
-  user: UserInfo | null
-  loading: boolean
-  error: string | null
-}
-
-interface UserInfo {
+interface User {
   _id: string
   username: string
   email: string
   role: string
 }
 
-interface LoginCredentials {
-  email: string
-  password: string
-}
-
-interface ApiError {
-  response?: {
-    data?: {
-      error?: string
-    }
-    status?: number
-    statusText?: string
-  }
-  message?: string
+interface AuthState {
+  user: User | null
+  token: string | null
+  loading: boolean
+  error: string | null
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
-    token: localStorage.getItem('adminToken'),
-    user: JSON.parse(localStorage.getItem('adminUser') || 'null'),
+    user: null,
+    token: localStorage.getItem('authToken') || null,
     loading: false,
     error: null,
   }),
 
+  getters: {
+    isAuthenticated: (state) => !!state.token,
+    isAdmin: (state) => state.user?.role === 'admin',
+    currentUser: (state) => state.user,
+  },
+
   actions: {
-    async login(credentials: LoginCredentials) {
+    async login(email: string, password: string) {
       this.loading = true
       this.error = null
 
       try {
-        const response = await axios.post(`${API_URL}/auth/login`, credentials)
+        // For local development
+        const apiUrl = 'http://localhost:5000/api'
+        const response = await axios.post(`${apiUrl}/auth/login`, {
+          email,
+          password,
+        })
 
-        // Store the token and user info
-        this.token = response.data.token || 'dummytoken' // For now, since our backend doesn't generate a token yet
-        this.user = response.data.user
+        const { token, user } = response.data
 
-        // Save to localStorage
-        localStorage.setItem('adminToken', this.token)
-        localStorage.setItem('adminUser', JSON.stringify(this.user))
+        // Store token in localStorage
+        localStorage.setItem('authToken', token)
+
+        // Set token for future API requests
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+        // Update state
+        this.token = token
+        this.user = user
 
         return true
-      } catch (error: unknown) {
-        const apiError = error as ApiError
-        console.error('Login error:', apiError)
-        this.error = apiError.response?.data?.error || 'Failed to login'
+      } catch (err: unknown) {
+        console.error('Login error:', err)
+
+        if (axios.isAxiosError(err)) {
+          const axiosError = err as AxiosError
+          if (axiosError.response && axiosError.response.status === 401) {
+            this.error = 'Invalid email or password'
+          } else {
+            this.error = 'An error occurred during login'
+          }
+        } else {
+          this.error = 'An unexpected error occurred'
+        }
+
+        return false
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async fetchCurrentUser() {
+      if (!this.token) return false
+
+      this.loading = true
+      this.error = null
+
+      try {
+        // Set auth header
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+
+        // For local development
+        const apiUrl = 'http://localhost:5000/api'
+        const response = await axios.get(`${apiUrl}/auth/me`)
+
+        this.user = response.data
+        return true
+      } catch (err: unknown) {
+        console.error('Error fetching user:', err)
+
+        if (axios.isAxiosError(err)) {
+          const axiosError = err as AxiosError
+          if (axiosError.response && axiosError.response.status === 401) {
+            // Token expired or invalid
+            this.logout()
+          } else {
+            this.error = 'Failed to fetch user information'
+          }
+        } else {
+          this.error = 'An unexpected error occurred'
+        }
+
         return false
       } finally {
         this.loading = false
@@ -70,18 +114,15 @@ export const useAuthStore = defineStore('auth', {
     },
 
     logout() {
+      // Remove token from localStorage
+      localStorage.removeItem('authToken')
+
+      // Remove auth header
+      delete axios.defaults.headers.common['Authorization']
+
+      // Reset state
       this.token = null
       this.user = null
-
-      // Remove from localStorage
-      localStorage.removeItem('adminToken')
-      localStorage.removeItem('adminUser')
     },
-  },
-
-  getters: {
-    isAuthenticated: (state) => !!state.token,
-    currentUser: (state) => state.user,
-    isAdmin: (state) => state.user?.role === 'admin',
   },
 })

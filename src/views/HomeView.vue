@@ -73,24 +73,8 @@
       <div class="container">
         <h2>Latest Articles</h2>
         <div class="blog-preview-grid">
-          <div class="blog-preview">
-            <h3>Getting Started with Salesforce Omnistudio</h3>
-            <p class="date">April 15, 2025</p>
-            <p>
-              Learn how to leverage Salesforce Omnistudio components to build powerful, responsive
-              interfaces for your enterprise applications.
-            </p>
-            <router-link to="/blog/1" class="read-more">Read article →</router-link>
-          </div>
-          <div class="blog-preview">
-            <h3>Best Practices for Apex Development</h3>
-            <p class="date">March 28, 2025</p>
-            <p>
-              Discover the most effective patterns and practices for writing maintainable, efficient
-              Apex code in your Salesforce implementations.
-            </p>
-            <router-link to="/blog/2" class="read-more">Read article →</router-link>
-          </div>
+          <div class="blog-preview"></div>
+          <div class="blog-preview"></div>
         </div>
         <div class="view-all">
           <router-link to="/blog" class="btn btn-outline">View All Articles</router-link>

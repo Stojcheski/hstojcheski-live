@@ -1,349 +1,303 @@
-<!-- src/views/admin/BlogList.vue -->
+<!-- File location: src/views/admin/BlogEditor.vue -->
+
 <template>
-  <div class="blog-list">
-    <div class="list-header">
-      <h2>Blog Posts</h2>
-      <router-link :to="{ name: 'create-blog' }" class="create-btn"> Create New Post </router-link>
+  <section class="section container">
+    <div class="form-header" style="text-align: center">
+      <h1 class="editor-title">{{ isEditMode ? 'Edit Blog Post' : 'Create New Blog Post' }}</h1>
     </div>
 
-    <div v-if="blogStore.loading" class="loading">
-      <p>Loading blog posts...</p>
-    </div>
+    <form @submit.prevent="submitBlog" class="blog-form">
+      <div class="button-container top-cancel">
+        <router-link to="/admin" class="btn btn-secondary">Cancel</router-link>
+      </div>
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input
+          id="title"
+          class="sm-input"
+          type="text"
+          v-model="form.title"
+          required
+          style="width: 100%; max-width: 500px"
+        />
+      </div>
 
-    <div v-else-if="blogStore.error" class="error">
-      <p>{{ blogStore.error }}</p>
-      <button @click="fetchPosts" class="btn">Try Again</button>
-    </div>
+      <div class="form-group">
+        <label for="summary">Summary</label>
+        <textarea id="summary" v-model="form.summary" required></textarea>
+      </div>
 
-    <div v-else-if="adminPosts.length === 0" class="no-posts">
-      <p>No blog posts yet. Create your first post!</p>
-    </div>
+      <div class="form-group">
+        <label for="content">Content</label>
+        <textarea id="content" v-model="form.content" required></textarea>
+      </div>
 
-    <div v-else class="posts-table-container">
-      <table class="posts-table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th>Views</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="post in adminPosts" :key="post._id">
-            <td>
-              <div class="post-title">{{ post.title }}</div>
-              <div class="post-slug">{{ post.slug }}</div>
-            </td>
-            <td>
-              <span class="status" :class="getStatusClass(post)">
-                {{ getStatus(post) }}
-              </span>
-            </td>
-            <td>{{ formatDate(post.publishedAt || post.createdAt) }}</td>
-            <td>{{ post.viewCount }}</td>
-            <td>
-              <div class="actions">
-                <router-link :to="{ name: 'edit-blog', params: { id: post._id } }" class="edit-btn">
-                  Edit
-                </router-link>
-                <button @click="confirmDelete(post)" class="delete-btn">Delete</button>
-                <a :href="`/blog/${post.slug}`" target="_blank" class="view-btn">View</a>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="form-group">
+        <label for="tags">Tags (comma-separated)</label>
+        <input
+          id="tags"
+          class="sm-input"
+          type="text"
+          v-model="form.tags"
+          style="width: 100%; max-width: 500px"
+        />
+      </div>
 
-    <div v-if="showDeleteModal" class="delete-modal">
-      <div class="modal-content">
-        <h3>Confirm Delete</h3>
-        <p>Are you sure you want to delete "{{ postToDelete?.title }}"?</p>
-        <p>This action cannot be undone.</p>
-        <div class="modal-actions">
-          <button @click="cancelDelete" class="cancel-btn">Cancel</button>
-          <button @click="deletePost" class="confirm-delete-btn">Delete</button>
+      <div class="checkbox-row grouped">
+        <div class="form-checkbox">
+          <input
+            id="isPublished"
+            type="checkbox"
+            v-model="form.isPublished"
+            :disabled="form.isDraft || form.isScheduled"
+          />
+          <label for="isPublished">Publish immediately</label>
+        </div>
+
+        <div class="form-checkbox">
+          <input
+            id="isDraft"
+            type="checkbox"
+            v-model="form.isDraft"
+            :disabled="form.isPublished || form.isScheduled"
+          />
+          <label for="isDraft">Save as draft</label>
         </div>
       </div>
-    </div>
-  </div>
+
+      <div class="form-group">
+        <div class="form-checkbox">
+          <input
+            id="isScheduled"
+            type="checkbox"
+            v-model="form.isScheduled"
+            :disabled="form.isPublished || form.isDraft"
+          />
+          <label for="isScheduled">Schedule post</label>
+        </div>
+      </div>
+
+      <div v-if="form.isScheduled" class="form-group">
+        <label for="scheduledAt">Scheduled Date & Time</label>
+        <input
+          id="scheduledAt"
+          type="text"
+          v-model="form.scheduledAt"
+          placeholder="DD/MM/YYYY, HH:MM"
+        />
+      </div>
+
+      <div class="button-container">
+        <button type="submit" class="btn btn-primary">
+          {{ isEditMode ? 'Update Blog' : 'Save Blog' }}
+        </button>
+      </div>
+
+      <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+    </form>
+  </section>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useBlogStore } from '@/stores/BlogStore'
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios'
 
-const blogStore = useBlogStore()
-const adminPosts = computed(() => blogStore.getAdminPosts)
+export default defineComponent({
+  setup() {
+    const route = useRoute()
+    const form = ref({
+      title: '',
+      summary: '',
+      content: '',
+      tags: '',
+      isPublished: false,
+      isDraft: false,
+      isScheduled: false,
+      scheduledAt: '',
+    })
 
-const showDeleteModal = ref(false)
-const postToDelete = ref(null)
+    const successMessage = ref('')
+    const errorMessage = ref('')
+    const isEditMode = ref(false)
 
-const fetchPosts = () => {
-  blogStore.fetchAdminPosts()
-}
-
-const getStatus = (post) => {
-  if (post.isPublished) return 'Published'
-  if (post.isDraft) return 'Draft'
-  if (post.isScheduled) return 'Scheduled'
-  return 'Unknown'
-}
-
-const getStatusClass = (post) => {
-  if (post.isPublished) return 'published'
-  if (post.isDraft) return 'draft'
-  if (post.isScheduled) return 'scheduled'
-  return ''
-}
-
-const formatDate = (dateString) => {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
-const confirmDelete = (post) => {
-  postToDelete.value = post
-  showDeleteModal.value = true
-}
-
-const cancelDelete = () => {
-  postToDelete.value = null
-  showDeleteModal.value = false
-}
-
-const deletePost = async () => {
-  if (postToDelete.value) {
-    const success = await blogStore.deletePost(postToDelete.value._id)
-    if (success) {
-      // Refresh the list if needed
-      fetchPosts()
+    const generateSlug = (title: string) => {
+      return title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
     }
-    showDeleteModal.value = false
-    postToDelete.value = null
-  }
-}
 
-onMounted(() => {
-  fetchPosts()
+    const calculateReadTime = (content: string) => {
+      const wordCount = content.trim().split(/\s+/).length
+      const minutes = Math.max(1, Math.ceil(wordCount / 200))
+      return `${minutes} min read`
+    }
+
+    const submitBlog = async () => {
+      successMessage.value = ''
+      errorMessage.value = ''
+
+      try {
+        const apiBase = import.meta.env.MODE === 'development' ? 'http://localhost:5000' : ''
+
+        if (isEditMode.value) {
+          await axios.put(`${apiBase}/api/blogs/${route.params.id}`, {
+            ...form.value,
+            slug: generateSlug(form.value.title),
+            tags: form.value.tags.split(',').map((t) => t.trim()),
+            readTime: calculateReadTime(form.value.content),
+          })
+          successMessage.value = 'Blog updated successfully!'
+        } else {
+          await axios.post(`${apiBase}/api/blogs`, {
+            ...form.value,
+            slug: generateSlug(form.value.title),
+            tags: form.value.tags.split(',').map((t) => t.trim()),
+            blogImage: 'placeholder.jpg',
+            readTime: calculateReadTime(form.value.content),
+            author: import.meta.env.VITE_DEFAULT_AUTHOR_ID,
+          })
+          successMessage.value = 'Blog saved successfully!'
+          form.value = {
+            title: '',
+            summary: '',
+            content: '',
+            tags: '',
+            isPublished: false,
+            isDraft: false,
+            isScheduled: false,
+            scheduledAt: '',
+          }
+        }
+      } catch (error: any) {
+        errorMessage.value = error.response?.data?.message || 'Something went wrong.'
+      }
+    }
+
+    const loadBlog = async () => {
+      if (route.params.id) {
+        isEditMode.value = true
+        try {
+          const apiBase = import.meta.env.MODE === 'development' ? 'http://localhost:5000' : ''
+          const { data } = await axios.get(`${apiBase}/api/blogs/${route.params.id}`)
+          form.value = {
+            title: data.title,
+            summary: data.summary,
+            content: data.content,
+            tags: data.tags.join(', '),
+            isPublished: data.isPublished,
+            isDraft: data.isDraft,
+            isScheduled: data.isScheduled,
+            scheduledAt: data.scheduledAt || '',
+          }
+        } catch (error) {
+          console.error('Failed to load blog for editing.', error)
+        }
+      }
+    }
+
+    onMounted(loadBlog)
+
+    return { form, submitBlog, successMessage, errorMessage, isEditMode }
+  },
 })
 </script>
 
 <style scoped>
-.blog-list {
-  position: relative;
-}
-
-.list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-h2 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.create-btn {
-  padding: 0.5rem 1rem;
-  background-color: #41b883;
-  color: white;
-  border: none;
-  border-radius: 4px;
+.editor-title {
+  font-size: 1.75rem;
   font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-.create-btn:hover {
-  background-color: #349268;
-}
-
-.loading,
-.error,
-.no-posts {
   text-align: center;
-  padding: 2rem;
-  color: #666;
+  margin-bottom: 1rem;
+}
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.posts-table-container {
-  overflow-x: auto;
-}
-
-.posts-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.posts-table th,
-.posts-table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.posts-table th {
-  font-weight: 600;
-  color: #333;
-  background-color: #f5f5f5;
-}
-
-.post-title {
-  font-weight: 500;
-  color: #333;
-}
-
-.post-slug {
-  font-size: 0.8rem;
-  color: #666;
-  margin-top: 0.25rem;
-}
-
-.status {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-.status.published {
-  background-color: #d1e7dd;
-  color: #0a3622;
-}
-
-.status.draft {
-  background-color: #e2e3e5;
-  color: #41464b;
-}
-
-.status.scheduled {
-  background-color: #cff4fc;
-  color: #055160;
-}
-
-.actions {
+.blog-form {
   display: flex;
-  gap: 0.5rem;
-}
-
-.edit-btn,
-.delete-btn,
-.view-btn {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-.edit-btn {
-  background-color: #e2e3e5;
-  color: #41464b;
-  border: none;
-}
-
-.edit-btn:hover {
-  background-color: #d3d4d5;
-}
-
-.delete-btn {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: none;
-}
-
-.delete-btn:hover {
-  background-color: #f5c2c7;
-}
-
-.view-btn {
-  background-color: #cff4fc;
-  color: #055160;
-  border: none;
-}
-
-.view-btn:hover {
-  background-color: #b6effb;
-}
-
-.delete-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: white;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: var(--color-background-soft);
   padding: 2rem;
   border-radius: 8px;
-  width: 90%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-row.grouped {
+  display: flex;
+  justify-content: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+input[type='text'],
+textarea {
+  resize: vertical;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.sm-input {
+  height: 2.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.small-width {
   max-width: 500px;
 }
 
-.modal-content h3 {
-  margin-top: 0;
-  color: #333;
+label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--color-heading);
 }
 
-.modal-actions {
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.button-container {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
 }
 
-.cancel-btn,
-.confirm-delete-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
+.success-message {
+  color: green;
+  font-weight: bold;
 }
 
-.cancel-btn {
-  background-color: #e2e3e5;
-  color: #41464b;
-  border: none;
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+.top-cancel {
+  justify-content: flex-start;
+  margin-bottom: -1rem;
 }
 
-.confirm-delete-btn {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-}
-
-.btn {
-  background-color: #41b883;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.btn:hover {
-  background-color: #349268;
+textarea {
+  min-height: 120px;
 }
 </style>

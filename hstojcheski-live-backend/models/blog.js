@@ -32,7 +32,7 @@ const blogSchema = new mongoose.Schema({
   },
   blogImage: {
     type: String,
-    required: true,
+    required: false,
   },
   isPublished: {
     type: Boolean,
