@@ -21,7 +21,7 @@
     <div v-else class="blog-list">
       <div v-for="blog in blogs" :key="blog._id" class="blog-card">
         <h2>{{ blog.title }}</h2>
-        <p class="mb-1"><strong>Author:</strong> {{ blog.author.username || 'Unknown' }}</p>
+        <p class="mb-1"><strong>Author:</strong> {{ 'Test' }}</p>
         <p class="mb-1"><strong>Published:</strong> {{ formatDate(blog.createdAt) }}</p>
         <p class="mb-2"><strong>Summary:</strong> {{ blog.summary }}</p>
         <p>{{ previewContent(blog.content) }}</p>

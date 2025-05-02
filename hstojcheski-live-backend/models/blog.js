@@ -219,9 +219,15 @@ const blogSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  deletedDate: {
+    type: Date,
+    default: null,
+  },
+  deletedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 })
-
-blogSchema.index({ slug: 1 })
 
 const Blog = mongoose.model('Blog', blogSchema)
 

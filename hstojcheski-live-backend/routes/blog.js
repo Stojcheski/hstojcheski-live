@@ -4,17 +4,17 @@ import Blog from '../models/blog.js'
 
 const router = express.Router()
 
-// Get all published blog posts
+// Get all blogs for admin (no filters)
 router.get('/', async (req, res) => {
   try {
-    // Find all published blog posts, sort by date descending
-    const blogs = await Blog.find({ isPublished: true, isDeleted: false })
-      .sort({ publishedAt: -1 })
+    // Find ALL blog posts, sort by date descending, newest first
+    const blogs = await Blog.find()
+      .sort({ updatedAt: -1 })
       .select('-comments -likesCount -dislikesCount -sharesCount -bookmarksCount')
 
     res.json(blogs)
   } catch (err) {
-    console.error('Error fetching blogs:', err)
+    console.error('Error fetching all blogs for admin:', err)
     res.status(500).json({ message: 'Error fetching blogs', error: err.message })
   }
 })
@@ -150,7 +150,6 @@ router.delete('/:id', async (req, res) => {
       {
         isDeleted: true,
         deletedAt: new Date(),
-        deletedBy: req.body.userId, // Store who deleted it
       },
       { new: true },
     )
@@ -187,6 +186,30 @@ router.get('/slug/:slug', async (req, res) => {
   } catch (err) {
     console.error(`Error fetching blog with slug ${req.params.slug}:`, err)
     res.status(500).json({ message: 'Error fetching blog by slug', error: err.message })
+  }
+})
+
+// Toggle blog publish status (partial update - PATCH)
+router.patch('/:id', async (req, res) => {
+  try {
+    const { isPublished } = req.body
+
+    const blog = await Blog.findById(req.params.id)
+
+    if (!blog) {
+      return res.status(404).json({ message: 'Blog post not found' })
+    }
+
+    // Toggle publish status and set/unset publishedAt date
+    blog.isPublished = isPublished
+    blog.publishedAt = isPublished ? new Date() : null
+    blog.updatedAt = new Date()
+
+    const updatedBlog = await blog.save()
+    res.json(updatedBlog)
+  } catch (err) {
+    console.error(`Error toggling publish status for blog ${req.params.id}:`, err)
+    res.status(500).json({ message: 'Error updating publish status', error: err.message })
   }
 })
 

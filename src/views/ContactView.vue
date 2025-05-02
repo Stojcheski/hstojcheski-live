@@ -5,7 +5,7 @@
       <p class="intro">Have a question or want to work together? Feel free to reach out!</p>
 
       <div class="contact-grid">
-        <div class="contact-form-container">
+        <!--<div class="contact-form-container">
           <h2>Send me a message</h2>
           <form class="contact-form" @submit.prevent="submitForm">
             <div class="form-group">
@@ -64,7 +64,7 @@
               {{ formStatus.message }}
             </div>
           </form>
-        </div>
+        </div> -->
 
         <div class="contact-info">
           <h2>Contact Information</h2>
@@ -90,7 +90,36 @@
             </div>
             <div class="info-content">
               <h3>Email</h3>
-              <p><a href="mailto:contact@hstojcheski.live">contact@hstojcheski.live</a></p>
+              <p><a href="mailto:kiko.stojceski99@gmail.com">kiko.stojceski99@gmail.com</a></p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon email">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                ></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </div>
+            <div class="info-content">
+              <h3>Email</h3>
+              <p>
+                <a href="mailto:hristijan.stojcheski@outlook.com"
+                  >hristijan.stojcheski@outlook.com</a
+                >
+              </p>
             </div>
           </div>
 
@@ -121,7 +150,7 @@
             <h3>Connect with me</h3>
             <div class="social-icons">
               <a
-                href="https://linkedin.com/in/"
+                href="https://www.linkedin.com/in/hristijanstojcheski/"
                 target="_blank"
                 class="social-icon linkedin"
                 title="LinkedIn"
@@ -141,7 +170,7 @@
                 </svg>
               </a>
               <a
-                href="https://github.com/"
+                href="https://github.com/Stojcheski"
                 target="_blank"
                 class="social-icon github"
                 title="GitHub"
@@ -158,24 +187,6 @@
                   ></path>
                 </svg>
               </a>
-              <a
-                href="https://twitter.com/"
-                target="_blank"
-                class="social-icon twitter"
-                title="Twitter"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"
-                  ></path>
-                </svg>
-              </a>
             </div>
           </div>
         </div>
@@ -185,7 +196,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+/* import { reactive, ref } from 'vue'
 
 interface ContactForm {
   name: string
@@ -210,8 +221,6 @@ const submitting = ref<boolean>(false)
 const formStatus = ref<FormStatus | null>(null)
 
 const submitForm = async (): Promise<void> => {
-  // In a real application, you would integrate with a backend API
-  // For now, we'll simulate the form submission
   submitting.value = true
 
   try {
@@ -243,7 +252,7 @@ const submitForm = async (): Promise<void> => {
       formStatus.value = null
     }, 5000)
   }
-}
+} */
 </script>
 
 <style scoped>
@@ -292,7 +301,6 @@ h2 {
   color: #333;
 }
 
-/* Form styles */
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -358,7 +366,6 @@ label {
   border: 1px solid #f5c6cb;
 }
 
-/* Contact info styles */
 .info-item {
   display: flex;
   margin-bottom: 1.5rem;

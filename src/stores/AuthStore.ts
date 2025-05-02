@@ -1,33 +1,35 @@
 // src/stores/AuthStore.ts
 import { defineStore } from 'pinia'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 
+// Define the User interface
 interface User {
-  _id: string
+  id: string
   username: string
   email: string
-  role: string
+  role: 'admin' | 'author' | 'viewer'
 }
 
 interface AuthState {
   user: User | null
-  token: string | null
   loading: boolean
   error: string | null
 }
 
+// Use the API URL from environment variables or default to localhost in development
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     user: null,
-    token: localStorage.getItem('authToken') || null,
     loading: false,
     error: null,
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.token,
+    isAuthenticated: (state) => !!state.user,
     isAdmin: (state) => state.user?.role === 'admin',
-    currentUser: (state) => state.user,
+    isAuthor: (state) => state.user?.role === 'author' || state.user?.role === 'admin',
   },
 
   actions: {
@@ -36,93 +38,107 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
 
       try {
-        // For local development
-        const apiUrl = 'http://localhost:5000/api'
-        const response = await axios.post(`${apiUrl}/auth/login`, {
-          email,
-          password,
-        })
+        const response = await axios.post(
+          `${API_URL}/auth/login`,
+          { email, password },
+          { withCredentials: true }, // Important for cookies
+        )
 
-        const { token, user } = response.data
-
-        // Store token in localStorage
-        localStorage.setItem('authToken', token)
-
-        // Set token for future API requests
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-
-        // Update state
-        this.token = token
-        this.user = user
-
+        this.user = response.data.user
         return true
-      } catch (err: unknown) {
-        console.error('Login error:', err)
-
-        if (axios.isAxiosError(err)) {
-          const axiosError = err as AxiosError
-          if (axiosError.response && axiosError.response.status === 401) {
-            this.error = 'Invalid email or password'
-          } else {
-            this.error = 'An error occurred during login'
-          }
-        } else {
-          this.error = 'An unexpected error occurred'
-        }
-
+      } catch (error: any) {
+        this.error = error.response?.data?.message || 'Authentication failed'
         return false
       } finally {
         this.loading = false
       }
     },
 
-    async fetchCurrentUser() {
-      if (!this.token) return false
+    async logout() {
+      try {
+        await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true })
+        this.user = null
+      } catch (error: any) {
+        console.error('Logout error:', error)
+      }
+    },
 
+    async checkAuth() {
       this.loading = true
-      this.error = null
 
       try {
-        // Set auth header
-        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+        const response = await axios.get(`${API_URL}/auth/me`, { withCredentials: true })
 
-        // For local development
-        const apiUrl = 'http://localhost:5000/api'
-        const response = await axios.get(`${apiUrl}/auth/me`)
-
-        this.user = response.data
-        return true
-      } catch (err: unknown) {
-        console.error('Error fetching user:', err)
-
-        if (axios.isAxiosError(err)) {
-          const axiosError = err as AxiosError
-          if (axiosError.response && axiosError.response.status === 401) {
-            // Token expired or invalid
-            this.logout()
-          } else {
-            this.error = 'Failed to fetch user information'
-          }
-        } else {
-          this.error = 'An unexpected error occurred'
+        if (response.data.user) {
+          this.user = response.data.user
         }
-
-        return false
+      } catch (error) {
+        this.user = null
       } finally {
         this.loading = false
       }
     },
 
-    logout() {
-      // Remove token from localStorage
-      localStorage.removeItem('authToken')
+    // Admin-only: Create a new user
+    async createUser(userData: {
+      username: string
+      email: string
+      password: string
+      role: string
+    }) {
+      if (!this.isAdmin) {
+        this.error = 'Not authorized'
+        return false
+      }
 
-      // Remove auth header
-      delete axios.defaults.headers.common['Authorization']
+      try {
+        const response = await axios.post(`${API_URL}/auth/users`, userData, {
+          withCredentials: true,
+        })
 
-      // Reset state
-      this.token = null
-      this.user = null
+        return response.data.user
+      } catch (error: any) {
+        this.error = error.response?.data?.message || 'Error creating user'
+        return false
+      }
+    },
+
+    // Admin-only: Update user role
+    async updateUserRole(userId: string, role: 'admin' | 'author' | 'viewer') {
+      if (!this.isAdmin) {
+        this.error = 'Not authorized'
+        return false
+      }
+
+      try {
+        const response = await axios.patch(
+          `${API_URL}/auth/users/${userId}/role`,
+          { role },
+          { withCredentials: true },
+        )
+
+        return response.data.user
+      } catch (error: any) {
+        this.error = error.response?.data?.message || 'Error updating user role'
+        return false
+      }
+    },
+
+    // Admin-only: Get all users
+    async getAllUsers() {
+      if (!this.isAdmin) {
+        this.error = 'Not authorized'
+        return false
+      }
+
+      try {
+        const response = await axios.get(`${API_URL}/auth/users`, { withCredentials: true })
+
+        return response.data.users
+      } catch (error: any) {
+        this.error = error.response?.data?.message || 'Error fetching users'
+        return false
+      }
     },
   },
 })
