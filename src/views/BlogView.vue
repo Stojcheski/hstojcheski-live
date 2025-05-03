@@ -1,90 +1,183 @@
-<!-- File location: src/views/BlogView.vue -->
-
+<!-- src/views/BlogView.vue -->
 <template>
-  <section class="section container">
-    <div class="section-heading">
-      <h1>Blog Articles</h1>
-    </div>
+  <div class="blog">
+    <div class="container">
+      <h1>Blog</h1>
+      <p class="intro">
+        I write about Salesforce development, best practices, and industry insights.
+      </p>
 
-    <div v-if="isLoading" class="text-center mt-5">
-      <p>Loading blogs...</p>
-    </div>
-
-    <div v-else-if="isError" class="text-center mt-5">
-      <p>Error loading blogs: {{ errorMessage }}</p>
-    </div>
-
-    <div v-else-if="blogs.length === 0" class="text-center mt-5">
-      <p>No blogs found.</p>
-    </div>
-
-    <div v-else class="blog-list">
-      <div v-for="blog in blogs" :key="blog._id" class="blog-card">
-        <h2>{{ blog.title }}</h2>
-        <p class="mb-1"><strong>Author:</strong> {{ 'Test' }}</p>
-        <p class="mb-1"><strong>Published:</strong> {{ formatDate(blog.createdAt) }}</p>
-        <p class="mb-2"><strong>Summary:</strong> {{ blog.summary }}</p>
-        <p>{{ previewContent(blog.content) }}</p>
+      <div v-if="loading" class="loading">
+        <p>Loading blog posts...</p>
+      </div>
+      <div v-else-if="error" class="error">
+        <p>{{ error }}</p>
+        <button @click="reloadPosts" class="btn">Try Again</button>
+      </div>
+      <div v-else-if="blogPosts.length === 0" class="no-posts">
+        <p>No blog posts available at the moment.</p>
+      </div>
+      <div v-else class="blog-list">
+        <article v-for="post in blogPosts" :key="post.id" class="blog-card">
+          <h2 class="blog-title">
+            <router-link :to="`/blog/${post.id}`">{{ post.title }}</router-link>
+          </h2>
+          <p class="blog-date">{{ post.date }}</p>
+          <div v-if="post.tags && post.tags.length" class="blog-tags">
+            <span v-for="tag in post.tags" :key="tag" class="tag">{{ tag }}</span>
+          </div>
+          <p class="blog-summary">{{ post.summary }}</p>
+          <router-link :to="`/blog/${post.slug}`" class="read-more">Read more →</router-link>
+        </article>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted } from 'vue'
+<script lang="ts" setup>
 import { useBlogStore } from '@/stores/BlogStore'
-import { storeToRefs } from 'pinia'
+import { onMounted, computed } from 'vue'
 
-export default defineComponent({
-  setup() {
-    const blogStore = useBlogStore()
-    const { blogs, isLoading, isError, errorMessage } = storeToRefs(blogStore)
+const blogStore = useBlogStore()
+const blogPosts = computed(() => {
+  const posts = blogStore.getAllPosts
+  console.log('BlogPosts in component:', posts)
+  return posts
+})
+const loading = computed(() => blogStore.loading)
+const error = computed(() => blogStore.error)
 
-    onMounted(() => {
-      blogStore.fetchBlogs()
-    })
+const reloadPosts = () => {
+  console.log('Reloading posts...')
+  blogStore.fetchPosts()
+}
 
-    const formatDate = (dateString: string) => {
-      const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
-      return new Date(dateString).toLocaleDateString(undefined, options)
-    }
-
-    const previewContent = (content: string) => {
-      if (!content) return ''
-      return content.length > 100 ? content.slice(0, 100) + '...' : content
-    }
-
-    return { blogs, isLoading, isError, errorMessage, formatDate, previewContent }
-  },
+onMounted(() => {
+  console.log('BlogView mounted, fetching posts...')
+  blogStore.fetchPosts()
 })
 </script>
 
 <style scoped>
+.blog {
+  padding: 3rem 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+.intro {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 3rem;
+}
+
+.loading,
+.error,
+.no-posts {
+  text-align: center;
+  padding: 2rem;
+}
+
 .blog-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
-  margin-top: 2rem;
 }
 
 .blog-card {
-  padding: 1.5rem;
-  border: 1px solid var(--color-border);
+  background-color: white;
   border-radius: 8px;
-  background-color: var(--color-background-soft);
-  transition: box-shadow 0.3s;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.blog-card:hover {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+.blog-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.blog-card h2 {
-  color: var(--color-heading);
+.blog-title a {
+  color: #333;
+  text-decoration: none;
+}
+
+.blog-title a:hover {
+  color: #41b883;
+}
+
+.blog-date {
+  font-size: 0.9rem;
+  color: #666;
   margin-bottom: 1rem;
 }
 
-.blog-card p {
-  color: var(--color-text);
+.blog-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  background-color: #f0f8f4;
+  color: #41b883;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.blog-summary {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.read-more {
+  color: #41b883;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+pre {
+  background-color: #f1f1f1;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #41b883;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 1rem;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #349268;
 }
 </style>

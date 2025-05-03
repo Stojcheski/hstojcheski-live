@@ -28,6 +28,6 @@ coverage
 *.sw?
 
 # Ignore .env files
-.env
+.env*
 
 *.tsbuildinfo
