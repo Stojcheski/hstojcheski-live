@@ -18,9 +18,9 @@
         <p>No blog posts available at the moment.</p>
       </div>
       <div v-else class="blog-list">
-        <article v-for="post in blogPosts" :key="post.id" class="blog-card">
+        <article v-for="post in blogPosts" :key="post.slug" class="blog-card">
           <h2 class="blog-title">
-            <router-link :to="`/blog/${post.id}`">{{ post.title }}</router-link>
+            <router-link :to="`/blog/${post.slug}`">{{ post.title }}</router-link>
           </h2>
           <p class="blog-date">{{ post.date }}</p>
           <div v-if="post.tags && post.tags.length" class="blog-tags">
@@ -41,19 +41,16 @@ import { onMounted, computed } from 'vue'
 const blogStore = useBlogStore()
 const blogPosts = computed(() => {
   const posts = blogStore.getAllPosts
-  console.log('BlogPosts in component:', posts)
   return posts
 })
 const loading = computed(() => blogStore.loading)
 const error = computed(() => blogStore.error)
 
 const reloadPosts = () => {
-  console.log('Reloading posts...')
   blogStore.fetchPosts()
 }
 
 onMounted(() => {
-  console.log('BlogView mounted, fetching posts...')
   blogStore.fetchPosts()
 })
 </script>

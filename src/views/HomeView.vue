@@ -72,9 +72,22 @@
     <section class="latest-blogs">
       <div class="container">
         <h2>Latest Articles</h2>
-        <div class="blog-preview-grid">
-          <div class="blog-preview"></div>
-          <div class="blog-preview"></div>
+        <div v-if="loading" class="loading">
+          <p>Loading latest articles...</p>
+        </div>
+        <div v-else-if="error" class="error">
+          <p>{{ error }}</p>
+        </div>
+        <div v-else-if="featuredPosts.length === 0" class="no-posts">
+          <p>No articles available at the moment.</p>
+        </div>
+        <div v-else class="blog-preview-grid">
+          <div v-for="post in featuredPosts" :key="post.id" class="blog-preview">
+            <h3>{{ post.title }}</h3>
+            <p class="date">{{ post.date }}</p>
+            <p>{{ post.summary }}</p>
+            <router-link :to="`/blog/${post.slug}`" class="read-more">Read article →</router-link>
+          </div>
         </div>
         <div class="view-all">
           <router-link to="/blog" class="btn btn-outline">View All Articles</router-link>
@@ -83,6 +96,25 @@
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+import { onMounted, computed } from 'vue'
+import { useBlogStore } from '@/stores/BlogStore'
+
+const blogStore = useBlogStore()
+const loading = computed(() => blogStore.loading)
+const error = computed(() => blogStore.error)
+
+const featuredPosts = computed(() => {
+  return blogStore.getAllPosts.slice(0, 3)
+})
+
+onMounted(() => {
+  if (blogStore.posts.length === 0) {
+    blogStore.fetchPosts()
+  }
+})
+</script>
 
 <style scoped>
 .home {

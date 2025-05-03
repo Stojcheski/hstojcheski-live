@@ -95,9 +95,6 @@ export default defineComponent({
       isError.value = false
 
       try {
-        console.log('Route params:', route.params)
-        console.log('Fetching blog with slug:', route.params.slug)
-
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/blogs/slug/${route.params.slug}`,
           {
@@ -107,7 +104,6 @@ export default defineComponent({
           },
         )
 
-        console.log('Received blog response:', response.data)
         blog.value = response.data
       } catch (error: any) {
         console.error('Full error details:', {
