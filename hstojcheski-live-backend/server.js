@@ -1,11 +1,16 @@
-// hstojcheski-live-backend/server.js
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import Blog from './models/blog.js'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 
-dotenv.config()
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+dotenv.config({ path: __dirname + '/.env' })
+
+import Blog from './models/blog.js'
 
 const app = express()
 
@@ -14,15 +19,15 @@ app.use(cors())
 
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((err) => console.log('Error connecting to MongoDB:', err))
+  .then(() => console.log('✅ MongoDB connected successfully'))
+  .catch((err) => console.error('❌ Error connecting to MongoDB:', err))
 
-app.get('/blogs', async (req, res) => {
+app.get('/blog', async (req, res) => {
   try {
     const blogs = await Blog.find().sort({ createdAt: -1 })
     res.json(blogs)
   } catch (err) {
-    console.log(err)
+    console.error('❌ Error fetching blogs:', err)
     res.status(500).send('Error fetching blogs')
   }
 })
@@ -39,6 +44,6 @@ app.get('/blogs/slug/:slug', async (req, res) => {
   }
 })
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`)
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`🚀 Server is running on port ${process.env.PORT || 5000}`)
 })

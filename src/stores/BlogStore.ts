@@ -42,7 +42,7 @@ export const useBlogStore = defineStore('blog', {
     async fetchPosts() {
       this.loading = true
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs`)
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blog`)
         this.posts = response.data
         this.error = null
       } catch (error) {
