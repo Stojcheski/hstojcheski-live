@@ -4,6 +4,11 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+
+import './models/user.js'
+import './models/task.js'
+import './models/blog.js'
+
 import taskRoutes from './routes/tasks.js'
 import blogRoute from './routes/blog.js'
 
