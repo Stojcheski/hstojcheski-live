@@ -1,3 +1,4 @@
+<!-- src/views/TaskDetailView.vue -->
 <template>
   <div class="task-detail">
     <div class="container">
@@ -105,35 +106,6 @@
               </div>
             </div>
           </div>
-
-          <div class="add-comment">
-            <h3>Add Comment</h3>
-            <form @submit.prevent="submitComment">
-              <div class="form-group">
-                <label for="commentUser">Your Name</label>
-                <input
-                  type="text"
-                  id="commentUser"
-                  v-model="commentForm.user"
-                  required
-                  placeholder="Enter your name"
-                />
-              </div>
-              <div class="form-group">
-                <label for="commentText">Comment</label>
-                <textarea
-                  id="commentText"
-                  v-model="commentForm.comment"
-                  required
-                  placeholder="Write your comment here"
-                  rows="3"
-                ></textarea>
-              </div>
-              <button type="submit" :disabled="commentSubmitting" class="submit-button">
-                {{ commentSubmitting ? 'Submitting...' : 'Add Comment' }}
-              </button>
-            </form>
-          </div>
         </div>
 
         <div class="task-footer">
@@ -145,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTaskStore } from '@/stores/TaskStore'
 
@@ -156,13 +128,6 @@ const taskId = route.params.id as string
 const loading = computed(() => taskStore.loading)
 const error = computed(() => taskStore.error)
 const task = computed(() => taskStore.currentTask)
-
-// Comment form
-const commentForm = ref({
-  user: '',
-  comment: '',
-})
-const commentSubmitting = ref(false)
 
 const fetchTask = async () => {
   try {
@@ -182,27 +147,6 @@ const formatDate = (dateString: string) => {
     hour: '2-digit',
     minute: '2-digit',
   })
-}
-
-const submitComment = async () => {
-  if (!commentForm.value.user || !commentForm.value.comment) {
-    return
-  }
-
-  commentSubmitting.value = true
-
-  try {
-    await taskStore.addComment(taskId, commentForm.value.user, commentForm.value.comment)
-
-    // Reset form
-    commentForm.value.comment = ''
-
-    // Keep the username for future comments
-  } catch (error) {
-    console.error('Error adding comment:', error)
-  } finally {
-    commentSubmitting.value = false
-  }
 }
 
 onMounted(() => {

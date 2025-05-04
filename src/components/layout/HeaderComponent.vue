@@ -16,7 +16,7 @@
           <li><router-link to="/experience" @click="closeMobileMenu">Experience</router-link></li>
           <li><router-link to="/skills" @click="closeMobileMenu">Skills</router-link></li>
           <li><router-link to="/projects" @click="closeMobileMenu">Projects</router-link></li>
-          <li><router-link to="/tasks" @click="closeMobileMenu">TODOs</router-link></li>
+          <li><router-link to="/tasks" @click="closeMobileMenu">TO;DOs</router-link></li>
           <li><router-link to="/blog" @click="closeMobileMenu">Blog</router-link></li>
           <li><router-link to="/contact" @click="closeMobileMenu">Contact</router-link></li>
         </ul>

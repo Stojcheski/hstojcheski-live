@@ -1,8 +1,9 @@
+<!-- src/views/TasksView.vue -->
 <template>
   <div class="tasks">
     <div class="container">
-      <h1>TODOs & Tasks</h1>
-      <p class="intro">Track and manage tasks that I'm currently working on</p>
+      <h1>TO;DOs & Tasks</h1>
+      <p class="intro">Track the tasks that I'm currently working on</p>
 
       <div class="filters">
         <div class="filter-group">
@@ -124,11 +125,6 @@
             View Details →
           </router-link>
         </div>
-      </div>
-
-      <!-- Pagination (to be implemented later) -->
-      <div class="pagination">
-        <!-- Pagination controls will go here -->
       </div>
     </div>
   </div>
@@ -462,12 +458,6 @@ h1 {
 
 .view-task-link:hover {
   text-decoration: underline;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
 }
 
 @media (max-width: 768px) {
