@@ -4,11 +4,13 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import taskRoutes from './routes/tasks.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-dotenv.config({ path: __dirname + '/.env' })
+const envFile = `.env.${process.env.NODE_ENV || 'development'}`
+dotenv.config({ path: __dirname + '/' + envFile })
 
 import Blog from './models/blog.js'
 
@@ -16,6 +18,7 @@ const app = express()
 
 app.use(express.json())
 app.use(cors())
+app.use('/', taskRoutes)
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -44,6 +47,6 @@ app.get('/blogs/slug/:slug', async (req, res) => {
   }
 })
 
-app.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT, () => {
   console.log(`🚀 Server is running on port ${process.env.PORT || 5000}`)
 })

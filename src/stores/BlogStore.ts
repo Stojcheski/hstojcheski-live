@@ -53,7 +53,6 @@ export const useBlogStore = defineStore('blog', {
       }
     },
 
-    // Fetch a single blog post by slug
     async fetchPostBySlug(slug: string) {
       this.loading = true
       try {

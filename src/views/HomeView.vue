@@ -16,7 +16,6 @@
         </div>
         <div class="hero-image">
           <div class="profile-placeholder">
-            <!-- Replace with your actual profile image -->
             <img src="@/assets/profile-placeholder.png" alt="Hristijan Stojcheski" />
           </div>
         </div>
