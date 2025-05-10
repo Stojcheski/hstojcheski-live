@@ -7,9 +7,52 @@
       <div class="projects-grid">
         <div class="project-card">
           <div class="project-content">
+            <h2 class="project-title">Vue.js Portfolio & Blog Website</h2>
+            <div class="project-meta">
+              <span class="project-date">April 2024 - Present</span>
+              <span class="project-company">Personal Project</span>
+            </div>
+            <p class="project-description">
+              Designed and developed a full-stack personal portfolio website with a blog management
+              system. This project showcases my transition from Salesforce development to modern
+              front-end development with Vue.js.
+            </p>
+            <div class="project-details">
+              <h3>Key Contributions:</h3>
+              <ul>
+                <li>Built a responsive front-end using Vue.js 3, TypeScript, and Vite</li>
+                <li>
+                  Implemented state management with Pinia for blog posts and user authentication
+                </li>
+                <li>Developed a Node.js and Express backend with REST APIs for data handling</li>
+                <li>Created MongoDB models with Mongoose for structured data storage</li>
+                <li>
+                  Implemented a task management system with filtering and sorting capabilities
+                </li>
+                <li>Set up Nginx on a DigitalOcean droplet for hosting</li>
+                <li>Configured SSL certificates for secure HTTPS connections</li>
+                <li>Established Git-based deployment workflow for continuous delivery</li>
+              </ul>
+            </div>
+            <div class="project-tech">
+              <span class="tech-tag">Vue.js 3</span>
+              <span class="tech-tag">TypeScript</span>
+              <span class="tech-tag">Vite</span>
+              <span class="tech-tag">Pinia</span>
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">Express</span>
+              <span class="tech-tag">MongoDB</span>
+              <span class="tech-tag">Nginx</span>
+              <span class="tech-tag">Git</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-content">
             <h2 class="project-title">Enterprise B2B Telecom Salesforce Implementation</h2>
             <div class="project-meta">
-              <span class="project-date">2023 - Present</span>
+              <span class="project-date">February 2023 - April 2024</span>
               <span class="project-company">Qinshift x Avenga</span>
             </div>
             <p class="project-description">
@@ -41,38 +84,6 @@
               <span class="tech-tag">CPQ</span>
               <span class="tech-tag">REST</span>
               <span class="tech-tag">SOAP</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card">
-          <div class="project-content">
-            <h2 class="project-title">Custom CSV Upload Solution</h2>
-            <div class="project-meta">
-              <span class="project-date">2024</span>
-              <span class="project-company">Qinshift x Avenga</span>
-            </div>
-            <p class="project-description">
-              Led the design and implementation of a custom .csv file upload solution for a
-              Salesforce implementation, incorporating advanced error handling and business logic to
-              ensure streamlined processing and improved user experience.
-            </p>
-            <div class="project-details">
-              <h3>Key Responsibilities:</h3>
-              <ul>
-                <li>Designed the architecture for the CSV upload solution</li>
-                <li>Implemented file parsing and validation logic</li>
-                <li>Created custom error handling mechanisms</li>
-                <li>Developed a user-friendly interface for file upload and status tracking</li>
-                <li>Implemented data transformation and processing logic</li>
-                <li>Conducted performance testing and optimization</li>
-              </ul>
-            </div>
-            <div class="project-tech">
-              <span class="tech-tag">Apex</span>
-              <span class="tech-tag">LWC</span>
-              <span class="tech-tag">JavaScript</span>
-              <span class="tech-tag">CSV Processing</span>
             </div>
           </div>
         </div>
@@ -146,6 +157,38 @@
 
         <div class="project-card">
           <div class="project-content">
+            <h2 class="project-title">Custom CSV Upload Solution</h2>
+            <div class="project-meta">
+              <span class="project-date">2024</span>
+              <span class="project-company">Qinshift x Avenga</span>
+            </div>
+            <p class="project-description">
+              Led the design and implementation of a custom .csv file upload solution for a
+              Salesforce implementation, incorporating advanced error handling and business logic to
+              ensure streamlined processing and improved user experience.
+            </p>
+            <div class="project-details">
+              <h3>Key Responsibilities:</h3>
+              <ul>
+                <li>Designed the architecture for the CSV upload solution</li>
+                <li>Implemented file parsing and validation logic</li>
+                <li>Created custom error handling mechanisms</li>
+                <li>Developed a user-friendly interface for file upload and status tracking</li>
+                <li>Implemented data transformation and processing logic</li>
+                <li>Conducted performance testing and optimization</li>
+              </ul>
+            </div>
+            <div class="project-tech">
+              <span class="tech-tag">Apex</span>
+              <span class="tech-tag">LWC</span>
+              <span class="tech-tag">JavaScript</span>
+              <span class="tech-tag">CSV Processing</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-content">
             <h2 class="project-title">Predictive Analysis of Customer Churn</h2>
             <div class="project-meta">
               <span class="project-date">2022</span>
@@ -171,37 +214,6 @@
               <span class="tech-tag">Machine Learning</span>
               <span class="tech-tag">Data Visualization</span>
               <span class="tech-tag">Predictive Analytics</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card">
-          <div class="project-content">
-            <h2 class="project-title">BPMN Modeling and Workflow Automation</h2>
-            <div class="project-meta">
-              <span class="project-date">2022</span>
-              <span class="project-company">Research Project</span>
-            </div>
-            <p class="project-description">
-              Explored Business Process Model and Notation (BPMN) modeling and workflow automation
-              using HEFLO, optimizing business processes and enhancing efficiency. Evaluated HEFLO's
-              integration capabilities and its role in process automation.
-            </p>
-            <div class="project-details">
-              <h3>Key Research Areas:</h3>
-              <ul>
-                <li>BPMN modeling standards and best practices</li>
-                <li>Workflow automation techniques</li>
-                <li>Process optimization strategies</li>
-                <li>Integration capabilities of HEFLO</li>
-                <li>Real-world applications of BPMN in business processes</li>
-              </ul>
-            </div>
-            <div class="project-tech">
-              <span class="tech-tag">BPMN</span>
-              <span class="tech-tag">HEFLO</span>
-              <span class="tech-tag">Workflow Automation</span>
-              <span class="tech-tag">Process Optimization</span>
             </div>
           </div>
         </div>

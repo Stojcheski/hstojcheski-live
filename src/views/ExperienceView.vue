@@ -7,7 +7,48 @@
         <div class="timeline-item">
           <div class="timeline-marker"></div>
           <div class="timeline-content">
-            <div class="timeline-date">February 2023 - Present</div>
+            <div class="timeline-date">April 2024 - Present</div>
+            <h2>Front-End Developer</h2>
+            <h3>Personal Project</h3>
+            <p>Vue.js Portfolio & Blog Development</p>
+            <ul>
+              <li>
+                Designed and developed a personal portfolio and blog website using Vue.js 3,
+                TypeScript, and Vite
+              </li>
+              <li>
+                Implemented a responsive design with custom CSS for an optimal viewing experience
+                across devices
+              </li>
+              <li>
+                Built a full-stack application with Node.js and Express backend for blog content
+                management
+              </li>
+              <li>Set up MongoDB for data storage with Mongoose ODM for structured data models</li>
+              <li>Created a task management system with filtering and sorting capabilities</li>
+              <li>Utilized Pinia for state management across the application</li>
+              <li>
+                Deployed the application to a DigitalOcean droplet with Nginx and SSL configuration
+              </li>
+              <li>Implemented CI/CD practices for streamlined development and deployment</li>
+            </ul>
+            <div class="tech-stack">
+              <span class="tech-tag">Vue.js 3</span>
+              <span class="tech-tag">TypeScript</span>
+              <span class="tech-tag">Vite</span>
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">Express</span>
+              <span class="tech-tag">MongoDB</span>
+              <span class="tech-tag">Nginx</span>
+              <span class="tech-tag">Git</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">February 2023 - April 2024</div>
             <h2>Salesforce Developer</h2>
             <h3>Qinshift x Avenga</h3>
             <p>Enterprise B2B Telecom Salesforce Implementation</p>
@@ -52,12 +93,6 @@
                 Developed and customized CPQ business rules, approval processes, guided selling
                 flows, and pricing logic
               </li>
-              <li>
-                Provided technical assistance during UAT, addressing user concerns and clarifying
-                system functionality
-              </li>
-              <li>Conducted regular data migrations from legacy systems to Salesforce</li>
-              <li>Built and deployed custom Lightning Web Components to improve user experience</li>
             </ul>
             <div class="tech-stack">
               <span class="tech-tag">APEX</span>
