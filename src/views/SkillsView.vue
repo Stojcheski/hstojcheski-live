@@ -34,7 +34,44 @@
             <li class="skill-item">
               <span class="skill-name">Salesforce Administration</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 90%"></div>
+                <div class="skill-level" style="width: 85%"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- New Category: Web Development -->
+        <div class="skill-category">
+          <h2><i class="icon web"></i>Web Development</h2>
+          <ul class="skill-list">
+            <li class="skill-item">
+              <span class="skill-name">Vue.js</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 65%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">TypeScript</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 70%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">Responsive CSS</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 65%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">Vite</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 65%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">State Management (Pinia)</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 60%"></div>
               </div>
             </li>
           </ul>
@@ -52,7 +89,7 @@
             <li class="skill-item">
               <span class="skill-name">SOAP API Integration</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 80%"></div>
+                <div class="skill-level" style="width: 60%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -100,6 +137,31 @@
           </ul>
         </div>
 
+        <!-- New Category: DevOps & Deployment -->
+        <div class="skill-category">
+          <h2><i class="icon devops"></i>DevOps & Deployment</h2>
+          <ul class="skill-list">
+            <li class="skill-item">
+              <span class="skill-name">Git Version Control</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 85%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">Nginx Configuration</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 60%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">SSL Certificates</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 65%"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
         <div class="skill-category">
           <h2><i class="icon programming"></i>Programming Languages</h2>
           <ul class="skill-list">
@@ -112,7 +174,7 @@
             <li class="skill-item">
               <span class="skill-name">JavaScript</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 65%"></div>
+                <div class="skill-level" style="width: 75%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -124,7 +186,38 @@
             <li class="skill-item">
               <span class="skill-name">C++</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 70%"></div>
+                <div class="skill-level" style="width: 55%"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- New Category: Backend Development -->
+        <div class="skill-category">
+          <h2><i class="icon backend"></i>Backend Development</h2>
+          <ul class="skill-list">
+            <li class="skill-item">
+              <span class="skill-name">Node.js</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 55%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">Express.js</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 50%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">MongoDB</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 50%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">RESTful API Design</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 75%"></div>
               </div>
             </li>
           </ul>
@@ -264,6 +357,14 @@ h1 {
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.skill-category:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .skill-category h2 {
@@ -281,6 +382,46 @@ h1 {
   margin-right: 0.5rem;
   background-color: #41b883;
   border-radius: 50%;
+  position: relative;
+}
+
+/* Custom icons for new categories */
+.icon.web::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border: 2px solid white;
+  border-radius: 2px;
+}
+
+.icon.devops::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border: 2px solid white;
+  border-radius: 50%;
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+
+.icon.backend::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 2px;
 }
 
 .skill-list {
