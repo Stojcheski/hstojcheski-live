@@ -68,6 +68,11 @@ This is a full-stack personal portfolio website designed and developed by **Hris
 - **SSL**: TLS 1.2/1.3 manually configured using DigitalOcean-provided certs
 - **Nginx**: Redirects HTTP → HTTPS, serves frontend and proxies backend if needed
 
+## Deployment Script
+
+Run `scripts/deploy.sh` on the server to pull the latest commit, install new dependencies, build the frontend, and restart the backend via PM2. Adjust `REPO_DIR` and other paths inside the script to match your setup.
+
+
 ---
 
 ## 🚧 In Progress / To Do
