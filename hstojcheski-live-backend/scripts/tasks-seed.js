@@ -208,8 +208,9 @@ const seedTasks = async () => {
         })
         console.log('✅ Created admin user')
       } catch (error) {
-        console.log('❌ Could not create admin user - User model might not be ready')
+        console.log('Could not create admin user - User model might not be ready')
         console.log('Using placeholder IDs for author and assignee')
+        console.log('Error:', error)
         adminUser = { _id: new mongoose.Types.ObjectId() }
       }
     }

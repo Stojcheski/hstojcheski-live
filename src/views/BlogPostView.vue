@@ -85,7 +85,7 @@ import axios from 'axios'
 export default defineComponent({
   setup() {
     const route = useRoute()
-    const blog = ref<any | null>(null)
+    const blog = ref<unknown | null>(null)
     const isLoading = ref(true)
     const isError = ref(false)
     const errorMessage = ref('')
@@ -105,16 +105,9 @@ export default defineComponent({
         )
 
         blog.value = response.data
-      } catch (error: any) {
-        console.error('Full error details:', {
-          status: error.response?.status,
-          data: error.response?.data,
-          message: error.message,
-          config: error.config,
-        })
-
+      } catch (error: unknown) {
+        console.error('Full error details:', error)
         isError.value = true
-        errorMessage.value = error.response?.data?.message || error.message || 'Unknown error'
       } finally {
         isLoading.value = false
       }
