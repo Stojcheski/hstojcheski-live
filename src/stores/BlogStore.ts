@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-interface BlogPost {
+export interface BlogPost {
   id: string
   slug: string
   post: string
@@ -11,6 +11,7 @@ interface BlogPost {
   summary: string
   createdAt: string
   tags: string[]
+  readTime: string
 }
 
 interface FormattedPost {

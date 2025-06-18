@@ -24,9 +24,9 @@
     <!-- Blog content -->
     <article v-else class="blog-article">
       <!-- Featured image (if available) -->
-      <div v-if="blog.featuredImage" class="featured-image-container">
-        <img :src="blog.featuredImage" :alt="blog.title" class="featured-image" />
-      </div>
+      <!-- <div v-if="blog.featuredImage" class="featured-image-container"> -->
+      <!--  <img :src="blog.featuredImage" :alt="blog.title" class="featured-image" /> -->
+      <!-- </div> -->
 
       <div class="blog-container">
         <!-- Blog header -->
@@ -81,11 +81,12 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
+import type { BlogPost } from '@/stores/BlogStore'
 
 export default defineComponent({
   setup() {
     const route = useRoute()
-    const blog = ref<unknown | null>(null)
+    const blog = ref<BlogPost | null>(null)
     const isLoading = ref(true)
     const isError = ref(false)
     const errorMessage = ref('')
