@@ -43,11 +43,15 @@ export const useBlogStore = defineStore('blog', {
       this.loading = true
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/blogs`)
-        this.posts = response.data
+
+        // Ensure we always get an array
+        this.posts = Array.isArray(response.data) ? response.data : []
         this.error = null
       } catch (error) {
         console.error('Error fetching blog posts:', error)
         this.error = 'Failed to load blog posts'
+        // Ensure posts is always an array, even on error
+        this.posts = []
       } finally {
         this.loading = false
       }
@@ -75,6 +79,11 @@ export const useBlogStore = defineStore('blog', {
 
   getters: {
     getAllPosts: (state): FormattedPost[] => {
+      // Add safety check to ensure posts is always an array
+      if (!Array.isArray(state.posts)) {
+        return []
+      }
+
       return state.posts.map((post: BlogPost) => {
         return {
           id: post.id,
@@ -90,6 +99,11 @@ export const useBlogStore = defineStore('blog', {
     getPostBySlug:
       (state) =>
       (slug: string): FormattedPost | null => {
+        // Add safety check
+        if (!Array.isArray(state.posts)) {
+          return null
+        }
+
         const post =
           state.posts.find((p) => p.slug === slug) ||
           (state.currentPost && state.currentPost.slug === slug ? state.currentPost : null)
@@ -110,6 +124,11 @@ export const useBlogStore = defineStore('blog', {
     getPostById:
       (state) =>
       (id: string): FormattedPost | null => {
+        // Add safety check
+        if (!Array.isArray(state.posts)) {
+          return null
+        }
+
         const post =
           state.posts.find((p) => p.id === id) ||
           (state.currentPost && state.currentPost.id === id ? state.currentPost : null)
