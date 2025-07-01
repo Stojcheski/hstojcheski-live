@@ -7,8 +7,8 @@
         <div class="timeline-item">
           <div class="timeline-marker"></div>
           <div class="timeline-content">
-            <div class="timeline-date">April 2024 - Present</div>
-            <h2>Front-End Developer</h2>
+            <div class="timeline-date">April 2025 - Present</div>
+            <h2>Full-stack Developer</h2>
             <h3>Personal Project</h3>
             <p>Vue.js Portfolio & Blog Development</p>
             <ul>
@@ -25,7 +25,6 @@
                 management
               </li>
               <li>Set up MongoDB for data storage with Mongoose ODM for structured data models</li>
-              <li>Created a task management system with filtering and sorting capabilities</li>
               <li>Utilized Pinia for state management across the application</li>
               <li>
                 Deployed the application to a DigitalOcean droplet with Nginx and SSL configuration
@@ -48,62 +47,57 @@
         <div class="timeline-item">
           <div class="timeline-marker"></div>
           <div class="timeline-content">
-            <div class="timeline-date">February 2023 - April 2024</div>
+            <div class="timeline-date">February 2023 - April 2025</div>
             <h2>Salesforce Developer</h2>
-            <h3>Qinshift x Avenga</h3>
+            <h3>Avenga</h3>
             <p>Enterprise B2B Telecom Salesforce Implementation</p>
             <ul>
               <li>
-                Contributed to the development and enhancement of a B2B Salesforce solution for a
-                major European telecom provider
+                Delivered scalable Salesforce solutions for a large European B2B telecom client
+                across Sales, CPQ, Service, and Marketing clouds.
               </li>
               <li>
-                Collaborated with business analysts to gather, analyze, and document functional and
-                technical requirements
+                Developed and maintained custom Lightning Web Components (LWC), Apex triggers, and
+                screen flows to enhance business workflows and improve user experience.
               </li>
               <li>
-                Reviewed Pull Requests from junior team members and mentored them to improve their
-                coding skills
+                Built OmniStudio assets (OmniScripts, Integration Procedures, DataRaptors,
+                FlexCards) to streamline guided processes and backend automation.
               </li>
               <li>
-                Designed and implemented features using Apex, Flows, and Process Builder, adhering
-                to Salesforce best practices
+                Implemented CPQ logic including guided selling, dynamic pricing, and approval
+                workflows to improve sales efficiency.
               </li>
               <li>
-                Worked on Dataraptors, OmniScripts, Integration Procedures, and FlexCards to address
-                dynamic business requirements
+                Led system integrations using REST and SOAP APIs and collaborated closely with
+                middleware teams for reliable data synchronization.
               </li>
               <li>
-                Maintained data accuracy and consistency by developing validation rules, duplicate
-                rules, and data governance measures
+                Executed data migration from legacy Java CRM into Salesforce using DataLoader and
+                Excel mapping with deduplication and transformation strategies.
               </li>
               <li>
-                Configured user roles, permission sets, layouts, and visibility rules to meet
-                organizational requirements
+                Supported user provisioning, access control, and configuration of profiles,
+                permission sets, and roles.
               </li>
               <li>
-                Diagnosed and resolved production and pre-production issues, implementing error
-                handling in Apex
+                Provided UAT and production support, triaging defects and ensuring smooth
+                deployments using Git and Salesforce CLI.
               </li>
               <li>
-                Supported integration of Salesforce with third-party systems via middleware and
-                REST/SOAP APIs
-              </li>
-              <li>
-                Developed and customized CPQ business rules, approval processes, guided selling
-                flows, and pricing logic
+                Mentored junior developers, conducted code reviews, and upheld best practices in
+                Apex and LWC development.
               </li>
             </ul>
             <div class="tech-stack">
               <span class="tech-tag">APEX</span>
-              <span class="tech-tag">REST</span>
-              <span class="tech-tag">SOAP</span>
+              <span class="tech-tag">REST & SOAP</span>
+              <span class="tech-tag">Salesforce Administration</span>
               <span class="tech-tag">Omnistudio</span>
-              <span class="tech-tag">LWC</span>
-              <span class="tech-tag">Aura</span>
-              <span class="tech-tag">Salesforce CLI</span>
-              <span class="tech-tag">Flows</span>
-              <span class="tech-tag">Process Builder</span>
+              <span class="tech-tag">LWC & Aura & Visualforce</span>
+              <span class="tech-tag">DevOps / Salesforce CLI</span>
+              <span class="tech-tag">Flows & Process Builder</span>
+              <span class="tech-tag">Business Analysis</span>
             </div>
           </div>
         </div>
@@ -114,27 +108,25 @@
             <div class="timeline-date">November 2023 - February 2024</div>
             <h2>Primary Teaching Assistant</h2>
             <h3>Faculty of Information and Communication Technologies – Bitola</h3>
-            <p>C++ Programming Instruction</p>
+            <p>C++ Programming</p>
             <ul>
               <li>
-                Instructed C++ programming to freshman students, simplifying complex concepts for
-                beginners
+                Led practical labs for C++ fundamentals, supporting beginner students with
+                algorithmic problem-solving and clean code practices.
               </li>
               <li>
-                Designed and evaluated assignments, providing constructive feedback to foster
-                learning and skill development
-              </li>
-              <li>Conducted on-site and remote walkthroughs of assignments</li>
-              <li>Supported and optimized proposed solutions</li>
-              <li>
-                Used tools like CodeBlocks and jdoodle to create practical learning experiences
+                Designed and graded assignments while providing 1:1 guidance and live debugging
+                sessions.
               </li>
             </ul>
             <div class="tech-stack">
               <span class="tech-tag">C++</span>
-              <span class="tech-tag">CodeBlocks</span>
-              <span class="tech-tag">jdoodle</span>
               <span class="tech-tag">Teaching</span>
+              <span class="tech-tag">Algorithms</span>
+              <span class="tech-tag">Mentoring</span>
+              <span class="tech-tag">Grading</span>
+              <span class="tech-tag">Teaching</span>
+              <span class="tech-tag">CodeBlocks</span>
             </div>
           </div>
         </div>
@@ -144,16 +136,14 @@
           <div class="timeline-content">
             <div class="timeline-date">June 2024 - August 2024</div>
             <h2>Tableau Integration with Piwik Pro</h2>
-            <h3>Qinshift x Avenga</h3>
+            <h3>Avenga</h3>
             <p>Data Visualization Project</p>
             <ul>
               <li>
-                Gathered, analyzed and documented functional and technical requirements for the
-                project
+                Built a Web Data Connector to import analytics from Piwik PRO into Tableau for
+                dynamic reporting.
               </li>
-              <li>Pre-processed data gathered from Piwik Pro</li>
-              <li>Created charts, dashboards and reports based on user's requirements</li>
-              <li>Sorted and displayed data in meaningful visualizations</li>
+              <li>Prepared and transformed datasets for visualization and insights delivery.</li>
             </ul>
             <div class="tech-stack">
               <span class="tech-tag">Tableau</span>
@@ -167,26 +157,21 @@
         <div class="timeline-item">
           <div class="timeline-marker"></div>
           <div class="timeline-content">
-            <div class="timeline-date">May 2024 - June 2024</div>
+            <div class="timeline-date">May 2024 - November 2024</div>
             <h2>Piwik Pro Connector for Salesforce</h2>
-            <h3>Qinshift x Avenga</h3>
+            <h3>Avenga</h3>
             <p>Integration Development</p>
             <ul>
               <li>
-                Developed a Salesforce connector for Piwik PRO, enhancing data integration using
-                metadata and REST APIs
+                Built a custom Salesforce connector to integrate Piwik PRO using REST APIs,
+                improving analytics and user tracking.
               </li>
               <li>
-                Applied best practices in Salesforce development, improving code quality and
-                maintainability
+                Designed efficient SOQL queries and dashboards for actionable reporting inside
+                Salesforce.
               </li>
               <li>
-                Gathered business requirements, conducted feasibility studies, and translated
-                specifications into actionable developer tasks
-              </li>
-              <li>
-                Deployed the solution across environments, coordinating UAT and SIT to ensure
-                successful implementation
+                Handled deployment across orgs and implemented custom components using LWC and Apex.
               </li>
             </ul>
             <div class="tech-stack">
@@ -194,7 +179,6 @@
               <span class="tech-tag">REST</span>
               <span class="tech-tag">Salesforce Administration</span>
               <span class="tech-tag">Salesforce CLI</span>
-              <span class="tech-tag">VS Code</span>
             </div>
           </div>
         </div>

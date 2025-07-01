@@ -6,37 +6,40 @@
       <section class="about-content">
         <div class="about-text">
           <p>
-            I'm Hristijan Stojcheski, a Salesforce Developer specializing in enterprise B2B telecom
-            implementations. My expertise lies in Apex, Lightning Web Components (LWC), and
-            Omnistudio development.
+            I'm Hristijan Stojcheski, a Software Engineer and Salesforce Full-Stack Developer with
+            4+ years of experience delivering scalable enterprise CRM solutions. I specialize in
+            Apex, Lightning Web Components (LWC), and OmniStudio, with a proven track record in
+            Salesforce-based B2B telecom implementations.
           </p>
 
           <p>
-            With experience in designing and optimizing complex business processes, I've helped
-            organizations improve their workflows and enhance system performance through scalable
-            technical solutions.
+            Passionate about designing and optimizing complex systems, I've helped organizations
+            automate workflows, integrate platforms, and boost system performance through robust,
+            secure, and maintainable solutions.
           </p>
 
           <h2>Professional Background</h2>
           <p>
-            Currently working at Qinshift x Avenga, I contribute to the development and enhancement
-            of a B2B Salesforce solution for a major European telecom provider. My responsibilities
-            include feature development, system integration, data management, and mentoring junior
-            team members.
+            As a Salesforce Engineer at Avenga (formerly Qinshift), I work across multiple squads
+            building and enhancing a large-scale Salesforce implementation for a major European
+            telecom provider. My responsibilities include custom LWC development, OmniStudio-based
+            automation, API integrations, CPQ configuration, and mentoring junior team members.
           </p>
 
           <h2>Education</h2>
           <p>
-            I currently pursue a Master's degree in Software Engineering and Applications from the
-            Faculty of Information and Communication Technologies in Bitola, where I also completed
-            my Bachelor's degree in Computer Science and Communications Engineering.
+            I'm currently pursuing a Master's degree in Software Engineering and Applications at the
+            Faculty of Information and Communication Technologies in Bitola. I also hold a
+            Bachelor's degree in Computer Science and Communications Engineering from the same
+            university.
           </p>
 
           <h2>Certifications</h2>
           <ul>
-            <li>Platform Developer I</li>
-            <li>Platform Administrator</li>
-            <li>Data Cloud Consultant</li>
+            <li>Salesforce Certified Platform Developer II (2025)</li>
+            <li>Salesforce Certified Data Cloud Consultant (2025)</li>
+            <li>Salesforce Certified Administrator (2024)</li>
+            <li>Salesforce Certified Platform Developer I (2023)</li>
           </ul>
         </div>
       </section>

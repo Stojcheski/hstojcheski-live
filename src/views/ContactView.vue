@@ -5,67 +5,6 @@
       <p class="intro">Have a question or want to work together? Feel free to reach out!</p>
 
       <div class="contact-grid">
-        <!--<div class="contact-form-container">
-          <h2>Send me a message</h2>
-          <form class="contact-form" @submit.prevent="submitForm">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                v-model="form.name"
-                required
-                placeholder="Your name"
-                class="input-field"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                v-model="form.email"
-                required
-                placeholder="Your email address"
-                class="input-field"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="subject">Subject</label>
-              <input
-                type="text"
-                id="subject"
-                v-model="form.subject"
-                required
-                placeholder="Subject of your message"
-                class="input-field"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea
-                id="message"
-                v-model="form.message"
-                rows="5"
-                required
-                placeholder="Your message"
-                class="input-field"
-              ></textarea>
-            </div>
-
-            <button type="submit" class="submit-btn" :disabled="submitting">
-              {{ submitting ? 'Sending...' : 'Send Message' }}
-            </button>
-
-            <div v-if="formStatus" :class="['form-status', formStatus.type]">
-              {{ formStatus.message }}
-            </div>
-          </form>
-        </div> -->
-
         <div class="contact-info">
           <h2>Contact Information</h2>
 
@@ -142,7 +81,7 @@
             </div>
             <div class="info-content">
               <h3>Location</h3>
-              <p>Macedonia</p>
+              <p>North Macedonia</p>
             </div>
           </div>
 
@@ -195,65 +134,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-/* import { reactive, ref } from 'vue'
-
-interface ContactForm {
-  name: string
-  email: string
-  subject: string
-  message: string
-}
-
-interface FormStatus {
-  type: 'success' | 'error'
-  message: string
-}
-
-const form = reactive<ContactForm>({
-  name: '',
-  email: '',
-  subject: '',
-  message: '',
-})
-
-const submitting = ref<boolean>(false)
-const formStatus = ref<FormStatus | null>(null)
-
-const submitForm = async (): Promise<void> => {
-  submitting.value = true
-
-  try {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    // Success message
-    formStatus.value = {
-      type: 'success',
-      message: 'Your message has been sent successfully! I will get back to you soon.',
-    }
-
-    // Reset the form
-    form.name = ''
-    form.email = ''
-    form.subject = ''
-    form.message = ''
-  } catch (error) {
-    // Error message
-    formStatus.value = {
-      type: 'error',
-      message: 'There was an error sending your message. Please try again later. Error: ' + error,
-    }
-  } finally {
-    submitting.value = false
-
-    // Clear status message after 5 seconds
-    setTimeout(() => {
-      formStatus.value = null
-    }, 5000)
-  }
-} */
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 .contact {
@@ -282,9 +163,9 @@ h1 {
 }
 
 .contact-grid {
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .contact-form-container,
@@ -293,6 +174,8 @@ h1 {
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
 }
 
 h2 {
@@ -436,7 +319,11 @@ label {
 
 @media (max-width: 768px) {
   .contact-grid {
-    grid-template-columns: 1fr;
+    justify-content: center;
+  }
+
+  .contact-info {
+    max-width: 100%;
   }
 }
 </style>

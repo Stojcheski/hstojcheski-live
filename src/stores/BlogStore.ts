@@ -1,4 +1,3 @@
-// src/stores/BlogStore.ts
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
@@ -43,7 +42,7 @@ export const useBlogStore = defineStore('blog', {
     async fetchPosts() {
       this.loading = true
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blog`)
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/blogs`)
         this.posts = response.data
         this.error = null
       } catch (error) {
@@ -57,7 +56,9 @@ export const useBlogStore = defineStore('blog', {
     async fetchPostBySlug(slug: string) {
       this.loading = true
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/blogs/slug/${slug}`)
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/blogs/slug/${slug}`,
+        )
         this.currentPost = response.data
         this.error = null
         return this.currentPost

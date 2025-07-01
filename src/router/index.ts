@@ -46,16 +46,6 @@ const router = createRouter({
       name: 'contact',
       component: () => import('../views/ContactView.vue'),
     },
-    {
-      path: '/tasks',
-      name: 'tasks',
-      component: () => import('../views/TasksView.vue'),
-    },
-    {
-      path: '/tasks/:id',
-      name: 'task-detail',
-      component: () => import('../views/TaskDetailView.vue'),
-    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

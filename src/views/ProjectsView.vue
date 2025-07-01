@@ -9,7 +9,7 @@
           <div class="project-content">
             <h2 class="project-title">Vue.js Portfolio & Blog Website</h2>
             <div class="project-meta">
-              <span class="project-date">April 2024 - Present</span>
+              <span class="project-date">April 2025 - Present</span>
               <span class="project-company">Personal Project</span>
             </div>
             <p class="project-description">
@@ -26,9 +26,6 @@
                 </li>
                 <li>Developed a Node.js and Express backend with REST APIs for data handling</li>
                 <li>Created MongoDB models with Mongoose for structured data storage</li>
-                <li>
-                  Implemented a task management system with filtering and sorting capabilities
-                </li>
                 <li>Set up Nginx on a DigitalOcean droplet for hosting</li>
                 <li>Configured SSL certificates for secure HTTPS connections</li>
                 <li>Established Git-based deployment workflow for continuous delivery</li>
@@ -52,8 +49,8 @@
           <div class="project-content">
             <h2 class="project-title">Enterprise B2B Telecom Salesforce Implementation</h2>
             <div class="project-meta">
-              <span class="project-date">February 2023 - April 2024</span>
-              <span class="project-company">Qinshift x Avenga</span>
+              <span class="project-date">February 2023 - April 2025</span>
+              <span class="project-company">Avenga</span>
             </div>
             <p class="project-description">
               Contributed to the development and enhancement of a B2B Salesforce solution for a
@@ -82,8 +79,8 @@
               <span class="tech-tag">LWC</span>
               <span class="tech-tag">OmniStudio</span>
               <span class="tech-tag">CPQ</span>
-              <span class="tech-tag">REST</span>
-              <span class="tech-tag">SOAP</span>
+              <span class="tech-tag">REST & SOAP</span>
+              <span class="tech-tag">Salesforce Administration</span>
             </div>
           </div>
         </div>
@@ -93,7 +90,7 @@
             <h2 class="project-title">Piwik Pro Connector for Salesforce</h2>
             <div class="project-meta">
               <span class="project-date">May 2024 - June 2024</span>
-              <span class="project-company">Qinshift x Avenga</span>
+              <span class="project-company">Avenga</span>
             </div>
             <p class="project-description">
               Developed a Salesforce connector for Piwik PRO, enhancing data integration
@@ -119,7 +116,6 @@
               <span class="tech-tag">Apex</span>
               <span class="tech-tag">REST</span>
               <span class="tech-tag">Salesforce APIs</span>
-              <span class="tech-tag">VS Code</span>
             </div>
           </div>
         </div>
@@ -129,7 +125,7 @@
             <h2 class="project-title">Tableau Integration with Piwik Pro</h2>
             <div class="project-meta">
               <span class="project-date">June 2024 - August 2024</span>
-              <span class="project-company">Qinshift x Avenga</span>
+              <span class="project-company">Avenga</span>
             </div>
             <p class="project-description">
               Created data visualization solutions by integrating Tableau with Piwik Pro analytics.
@@ -160,7 +156,7 @@
             <h2 class="project-title">Custom CSV Upload Solution</h2>
             <div class="project-meta">
               <span class="project-date">2024</span>
-              <span class="project-company">Qinshift x Avenga</span>
+              <span class="project-company">Avenga</span>
             </div>
             <p class="project-description">
               Led the design and implementation of a custom .csv file upload solution for a
@@ -210,6 +206,7 @@
               </ul>
             </div>
             <div class="project-tech">
+              <span class="tech-tag">Python</span>
               <span class="tech-tag">Data Science</span>
               <span class="tech-tag">Machine Learning</span>
               <span class="tech-tag">Data Visualization</span>
@@ -244,7 +241,7 @@
             <div class="project-tech">
               <span class="tech-tag">C#</span>
               <span class="tech-tag">SQL</span>
-              <span class="tech-tag">Database Design</span>
+              <span class="tech-tag">Architecture</span>
               <span class="tech-tag">UI/UX</span>
             </div>
           </div>
