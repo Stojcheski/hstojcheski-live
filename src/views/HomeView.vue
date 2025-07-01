@@ -24,7 +24,6 @@
       <link rel="canonical" href="https://hstojcheski.live" />
     </Head>
 
-    <!-- Enhanced Hero Section -->
     <section class="hero">
       <div class="container">
         <div class="hero-content">
@@ -34,7 +33,7 @@
           </h1>
           <h2>
             <span class="typewriter">Salesforce Developer</span>
-            <span class="subtitle">& Software Engineer</span>
+            <span class="subtitle"> & Software Engineer</span>
           </h2>
           <p class="tagline">
             I build scalable enterprise solutions with 4+ years of experience in Salesforce
@@ -98,7 +97,6 @@
       </div>
     </section>
 
-    <!-- Skills Overview -->
     <section class="skills-overview">
       <div class="container">
         <h2>Core Expertise</h2>
@@ -127,7 +125,6 @@
       </div>
     </section>
 
-    <!-- Professional Summary with CTA -->
     <section class="summary">
       <div class="container">
         <h2>About My Work</h2>
@@ -153,7 +150,6 @@
       </div>
     </section>
 
-    <!-- Featured Projects with Better CTAs -->
     <section class="featured-projects">
       <div class="container">
         <div class="section-header">
@@ -218,7 +214,6 @@
       </div>
     </section>
 
-    <!-- Latest Articles -->
     <section class="latest-blogs">
       <div class="container">
         <div class="section-header">
@@ -254,7 +249,6 @@
       </div>
     </section>
 
-    <!-- Call to Action Section -->
     <section class="cta-section">
       <div class="container">
         <div class="cta-content">

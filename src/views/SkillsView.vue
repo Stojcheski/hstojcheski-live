@@ -8,9 +8,9 @@
           <h2><i class="icon salesforce"></i>Salesforce Development</h2>
           <ul class="skill-list">
             <li class="skill-item">
-              <span class="skill-name">Apex Development</span>
+              <span class="skill-name">Apex Programming</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 95%"></div>
+                <div class="skill-level" style="width: 90%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -20,9 +20,15 @@
               </div>
             </li>
             <li class="skill-item">
-              <span class="skill-name">Omnistudio (Vlocity)</span>
+              <span class="skill-name">OmniStudio</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 80%"></div>
+                <div class="skill-level" style="width: 85%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">Flow Builder</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 90%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -31,144 +37,29 @@
                 <div class="skill-level" style="width: 80%"></div>
               </div>
             </li>
-            <li class="skill-item">
-              <span class="skill-name">Salesforce Administration</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 85%"></div>
-              </div>
-            </li>
           </ul>
         </div>
 
-        <!-- New Category: Web Development -->
+        <!-- New Category: Frontend Development -->
         <div class="skill-category">
-          <h2><i class="icon web"></i>Web Development</h2>
+          <h2><i class="icon web"></i>Frontend Development</h2>
           <ul class="skill-list">
             <li class="skill-item">
-              <span class="skill-name">Vue.js</span>
+              <span class="skill-name">Vue.js 3</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 65%"></div>
+                <div class="skill-level" style="width: 80%"></div>
               </div>
             </li>
             <li class="skill-item">
               <span class="skill-name">TypeScript</span>
               <div class="skill-bar">
-                <div class="skill-level" style="width: 70%"></div>
+                <div class="skill-level" style="width: 75%"></div>
               </div>
             </li>
             <li class="skill-item">
-              <span class="skill-name">Responsive CSS</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 65%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">Vite</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 65%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">State Management (Pinia)</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 60%"></div>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="skill-category">
-          <h2><i class="icon integration"></i>Integration & APIs</h2>
-          <ul class="skill-list">
-            <li class="skill-item">
-              <span class="skill-name">REST API Development</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 80%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">SOAP API Integration</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 60%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">Middleware Integration</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 70%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">API Design</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 80%"></div>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="skill-category">
-          <h2><i class="icon data"></i>Data Management</h2>
-          <ul class="skill-list">
-            <li class="skill-item">
-              <span class="skill-name">Data Migration</span>
+              <span class="skill-name">HTML & CSS</span>
               <div class="skill-bar">
                 <div class="skill-level" style="width: 85%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">Data Validation</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 90%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">Data Modeling</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 82%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">ETL Processes</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 80%"></div>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- New Category: DevOps & Deployment -->
-        <div class="skill-category">
-          <h2><i class="icon devops"></i>DevOps & Deployment</h2>
-          <ul class="skill-list">
-            <li class="skill-item">
-              <span class="skill-name">Git Version Control</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 85%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">Nginx Configuration</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 60%"></div>
-              </div>
-            </li>
-            <li class="skill-item">
-              <span class="skill-name">SSL Certificates</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 65%"></div>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="skill-category">
-          <h2><i class="icon programming"></i>Programming Languages</h2>
-          <ul class="skill-list">
-            <li class="skill-item">
-              <span class="skill-name">Apex</span>
-              <div class="skill-bar">
-                <div class="skill-level" style="width: 90%"></div>
               </div>
             </li>
             <li class="skill-item">
@@ -254,6 +145,91 @@
         </div>
 
         <div class="skill-category">
+          <h2><i class="icon data"></i>Data Management</h2>
+          <ul class="skill-list">
+            <li class="skill-item">
+              <span class="skill-name">Data Loader</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 85%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">Data Validation</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 90%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">Data Modeling</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 82%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">ETL Processes</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 80%"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- New Category: DevOps & Deployment -->
+        <div class="skill-category">
+          <h2><i class="icon devops"></i>DevOps & Deployment</h2>
+          <ul class="skill-list">
+            <li class="skill-item">
+              <span class="skill-name">Git Version Control</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 85%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">Nginx Configuration</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 60%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">SSL Certificates</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 65%"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="skill-category">
+          <h2><i class="icon programming"></i>Programming Languages</h2>
+          <ul class="skill-list">
+            <li class="skill-item">
+              <span class="skill-name">Apex</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 90%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">JavaScript</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 75%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">Java</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 80%"></div>
+              </div>
+            </li>
+            <li class="skill-item">
+              <span class="skill-name">C++</span>
+              <div class="skill-bar">
+                <div class="skill-level" style="width: 55%"></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="skill-category">
           <h2><i class="icon soft"></i>Soft Skills</h2>
           <ul class="skill-list">
             <li class="skill-item">
@@ -289,29 +265,50 @@
         <div class="certification-list">
           <div class="certification-item">
             <div class="certification-logo">
-              <img :src="platformDeveloperOneBadge" alt="Platform Developer I Badge" />
+              <img
+                src="@/assets/salesforce-platform-developer-ii.png"
+                alt="Salesforce Platform Developer II"
+              />
             </div>
             <div class="certification-details">
-              <h3>Platform Developer I</h3>
-              <p>Salesforce</p>
+              <h3>Platform Developer II</h3>
+              <p>Salesforce • 2025</p>
             </div>
           </div>
+
           <div class="certification-item">
             <div class="certification-logo">
-              <img :src="adminBadge" alt="Platform Administrator Badge" />
-            </div>
-            <div class="certification-details">
-              <h3>Platform Administrator</h3>
-              <p>Salesforce</p>
-            </div>
-          </div>
-          <div class="certification-item">
-            <div class="certification-logo">
-              <img :src="dataCloudBadge" alt="Data Cloud Consultant Badge" />
+              <img
+                src="@/assets/salesforce-data-cloud-consultant.png"
+                alt="Salesforce Data Cloud Consultant"
+              />
             </div>
             <div class="certification-details">
               <h3>Data Cloud Consultant</h3>
-              <p>Salesforce</p>
+              <p>Salesforce • 2025</p>
+            </div>
+          </div>
+
+          <div class="certification-item">
+            <div class="certification-logo">
+              <img src="@/assets/salesforce-administrator.png" alt="Salesforce Administrator" />
+            </div>
+            <div class="certification-details">
+              <h3>Administrator</h3>
+              <p>Salesforce • 2024</p>
+            </div>
+          </div>
+
+          <div class="certification-item">
+            <div class="certification-logo">
+              <img
+                src="@/assets/salesforce-platform-developer-i.png"
+                alt="Salesforce Platform Developer I"
+              />
+            </div>
+            <div class="certification-details">
+              <h3>Platform Developer I</h3>
+              <p>Salesforce • 2023</p>
             </div>
           </div>
         </div>
@@ -320,19 +317,19 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import adminBadge from '@/assets/2021-03_Badge_SF-Certified_Administrator_500x490px.png'
-import platformDeveloperOneBadge from '@/assets/2021-03_Badge_SF-Certified_Platform-Developer-I_500x490px.png'
-import dataCloudBadge from '@/assets/2023-08_Badge_SF-Certified_Data-Cloud-Con_500x490px.png'
+<script lang="ts" setup>
+// No additional JavaScript needed for this component
 </script>
 
 <style scoped>
 .skills {
   padding: 3rem 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -347,7 +344,7 @@ h1 {
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
 }
@@ -355,24 +352,26 @@ h1 {
 .skill-category {
   background-color: white;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition:
-    transform 0.3s,
-    box-shadow 0.3s;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .skill-category:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
 .skill-category h2 {
-  font-size: 1.3rem;
-  color: #333;
-  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #41b883;
+  padding-bottom: 0.5rem;
 }
 
 .icon {
@@ -385,7 +384,18 @@ h1 {
   position: relative;
 }
 
-/* Custom icons for new categories */
+/* Custom icons for categories */
+.icon.salesforce::before {
+  content: 'SF';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 8px;
+  font-weight: bold;
+}
+
 .icon.web::before {
   content: '';
   position: absolute;
@@ -424,6 +434,45 @@ h1 {
   border-radius: 2px;
 }
 
+.icon.tools::before {
+  content: '⚙';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 10px;
+}
+
+.icon.data::before {
+  content: '📊';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+}
+
+.icon.programming::before {
+  content: '</>';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.icon.soft::before {
+  content: '🤝';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+}
+
 .skill-list {
   list-style: none;
   padding: 0;
@@ -438,6 +487,7 @@ h1 {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  color: #333;
 }
 
 .skill-bar {
@@ -449,8 +499,9 @@ h1 {
 
 .skill-level {
   height: 100%;
-  background-color: #41b883;
+  background: linear-gradient(90deg, #41b883, #35a374);
   border-radius: 4px;
+  transition: width 0.8s ease-in-out;
 }
 
 .certifications {
@@ -465,6 +516,8 @@ h1 {
   color: #333;
   margin-bottom: 2rem;
   text-align: center;
+  border-bottom: 2px solid #41b883;
+  padding-bottom: 0.5rem;
 }
 
 .certification-list {
@@ -478,6 +531,15 @@ h1 {
   display: flex;
   align-items: center;
   gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #f8f9fa;
+  transition: transform 0.2s ease;
+}
+
+.certification-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .certification-logo {
@@ -487,6 +549,9 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 8px;
+  background: white;
+  padding: 0.5rem;
 }
 
 .certification-logo img {
@@ -498,11 +563,13 @@ h1 {
 .certification-details h3 {
   font-size: 1.1rem;
   margin-bottom: 0.25rem;
+  color: #333;
 }
 
 .certification-details p {
   color: #666;
   font-size: 0.9rem;
+  margin: 0;
 }
 
 @media (max-width: 768px) {
@@ -513,6 +580,11 @@ h1 {
   .certification-list {
     flex-direction: column;
     align-items: center;
+  }
+
+  .certification-item {
+    width: 100%;
+    max-width: 300px;
   }
 }
 </style>
