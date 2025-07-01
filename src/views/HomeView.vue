@@ -14,7 +14,7 @@
         <div class="hero-content">
           <span class="greeting">Hi there! I'm</span>
           <h1 class="hero-title">Hristijan Stojcheski</h1>
-          <h2 class="hero-subtitle">Salesforce Full-Stack Developer & Administrator</h2>
+          <h2 class="hero-subtitle">Salesforce Developer & Software Engineer</h2>
           <p class="hero-description">
             Passionate about building scalable enterprise solutions with 4+ years of experience in
             Salesforce development, Lightning Web Components, and modern web technologies. Currently
@@ -95,7 +95,7 @@
             solutions that balance business needs with technical precision.
           </p>
           <div class="cta-section">
-            <router-link to="/about" class="read-more">
+            <router-link to="/about" class="read-more-button">
               Learn More About My Background →
             </router-link>
           </div>
@@ -534,6 +534,26 @@ section {
 
 .cta-section {
   margin-top: 2rem;
+}
+
+/* Fixed styling for the "Learn More" button */
+.read-more-button {
+  display: inline-block;
+  background: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+  border: 2px solid var(--primary-color);
+}
+
+.read-more-button:hover {
+  background: var(--secondary-color);
+  border-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(65, 184, 131, 0.3);
 }
 
 .read-more {
