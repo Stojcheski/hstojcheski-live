@@ -251,6 +251,12 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { useSEO, pagesSEO } from '@/composables'
+
+useSEO(pagesSEO.projects)
+</script>
+
 <style scoped>
 .projects {
   padding: 3rem 0;

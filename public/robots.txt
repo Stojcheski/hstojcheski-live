@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Disallow admin routes from search engines
+Disallow: /admin/
+Disallow: /api/
+
+# Allow sitemap
+Sitemap: https://hstojcheski.live/sitemap.xml
+
+# Crawl delay (optional - be considerate to search engines)
+Crawl-delay: 1

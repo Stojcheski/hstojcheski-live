@@ -317,8 +317,9 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-// No additional JavaScript needed for this component
+<script setup lang="ts">
+import { useSEO, pagesSEO } from '@/composables'
+useSEO(pagesSEO.skills)
 </script>
 
 <style scoped>

@@ -212,6 +212,7 @@
 import { onMounted, computed } from 'vue'
 import { useBlogStore } from '@/stores/BlogStore'
 import { Head } from '@vueuse/head'
+import { useSEO, pagesSEO } from '@/composables'
 
 const blogStore = useBlogStore()
 const loading = computed(() => blogStore.loading)
@@ -226,6 +227,8 @@ const featuredPosts = computed(() => {
     return []
   }
 })
+
+useSEO(pagesSEO.home)
 
 onMounted(async () => {
   try {

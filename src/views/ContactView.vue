@@ -134,7 +134,10 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useSEO, pagesSEO } from '@/composables'
+useSEO(pagesSEO.contact)
+</script>
 
 <style scoped>
 .contact {

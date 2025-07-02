@@ -188,7 +188,8 @@
 </template>
 
 <script setup lang="ts">
-// TypeScript component setup
+import { useSEO, pagesSEO } from '@/composables'
+useSEO(pagesSEO.experience)
 </script>
 
 <style scoped>

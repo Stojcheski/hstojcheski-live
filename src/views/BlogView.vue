@@ -37,6 +37,7 @@
 <script lang="ts" setup>
 import { useBlogStore } from '@/stores/BlogStore'
 import { onMounted, computed } from 'vue'
+import { useSEO, pagesSEO } from '@/composables'
 
 const blogStore = useBlogStore()
 const blogPosts = computed(() => {
@@ -49,6 +50,8 @@ const error = computed(() => blogStore.error)
 const reloadPosts = () => {
   blogStore.fetchPosts()
 }
+
+useSEO(pagesSEO.blog)
 
 onMounted(() => {
   blogStore.fetchPosts()
