@@ -36,6 +36,7 @@
 
           <h2>Certifications</h2>
           <ul>
+            <li>Agentforce Specialist (2025)</li>
             <li>Salesforce Certified Platform Developer II (2025)</li>
             <li>Salesforce Certified Data Cloud Consultant (2025)</li>
             <li>Salesforce Certified Administrator (2024)</li>

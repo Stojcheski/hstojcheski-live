@@ -266,6 +266,18 @@
           <div class="certification-item">
             <div class="certification-logo">
               <img
+                src="@/assets/agentforce-specialist.png"
+                alt="Salesforce Platform Developer II"
+              />
+            </div>
+            <div class="certification-details">
+              <h3>Agentforce Specialist</h3>
+              <p>Salesforce • 2025</p>
+            </div>
+          </div>
+          <div class="certification-item">
+            <div class="certification-logo">
+              <img
                 src="@/assets/salesforce-platform-developer-ii.png"
                 alt="Salesforce Platform Developer II"
               />

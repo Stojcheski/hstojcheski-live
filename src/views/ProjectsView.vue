@@ -89,7 +89,7 @@
           <div class="project-content">
             <h2 class="project-title">Piwik Pro Connector for Salesforce</h2>
             <div class="project-meta">
-              <span class="project-date">May 2024 - June 2024</span>
+              <span class="project-date">May 2024 - November 2024</span>
               <span class="project-company">Avenga</span>
             </div>
             <p class="project-description">
